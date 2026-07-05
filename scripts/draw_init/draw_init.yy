@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"draw_init",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"draw_init",
+  "parent":{
+    "name":"GUI",
+    "path":"folders/GUI.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

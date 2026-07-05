@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"draw_end",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"draw_end",
+  "parent":{
+    "name":"GUI",
+    "path":"folders/GUI.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

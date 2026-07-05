@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"pasar_dia",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"pasar_dia",
+  "parent":{
+    "name":"Planetes",
+    "path":"Planetes.yyp",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

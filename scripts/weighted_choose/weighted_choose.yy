@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"weighted_choose",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"weighted_choose",
+  "parent":{
+    "name":"Planetes",
+    "path":"Planetes.yyp",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

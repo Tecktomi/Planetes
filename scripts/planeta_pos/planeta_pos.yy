@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"planeta_pos",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"planeta_pos",
+  "parent":{
+    "name":"Planetes",
+    "path":"Planetes.yyp",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

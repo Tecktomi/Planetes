@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"mision_aceptar",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"mision_aceptar",
+  "parent":{
+    "name":"Planetes",
+    "path":"Planetes.yyp",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

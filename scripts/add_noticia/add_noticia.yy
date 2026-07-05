@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"add_noticia",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"add_noticia",
+  "parent":{
+    "name":"ADD",
+    "path":"folders/ADD.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

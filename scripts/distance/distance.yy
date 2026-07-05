@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"distance",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"distance",
+  "parent":{
+    "name":"System",
+    "path":"folders/System.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

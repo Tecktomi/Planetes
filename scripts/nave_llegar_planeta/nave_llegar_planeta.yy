@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"nave_llegar_planeta",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"nave_llegar_planeta",
+  "parent":{
+    "name":"Planetes",
+    "path":"Planetes.yyp",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

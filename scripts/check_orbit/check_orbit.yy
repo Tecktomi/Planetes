@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"check_orbit",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"check_orbit",
+  "parent":{
+    "name":"Planetes",
+    "path":"Planetes.yyp",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

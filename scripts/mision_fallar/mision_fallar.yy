@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"mision_fallar",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"mision_fallar",
+  "parent":{
+    "name":"Planetes",
+    "path":"Planetes.yyp",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

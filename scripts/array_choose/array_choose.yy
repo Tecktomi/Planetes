@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"array_choose",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"array_choose",
+  "parent":{
+    "name":"System",
+    "path":"folders/System.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

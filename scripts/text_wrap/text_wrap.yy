@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"text_wrap",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"text_wrap",
+  "parent":{
+    "name":"GUI",
+    "path":"folders/GUI.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

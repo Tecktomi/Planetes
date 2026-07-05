@@ -1,0 +1,19 @@
+function add_nave(){
+	with control{
+		var nave = {
+			index : counter_nave++,
+			origen : null_planeta,
+			destino : null_planeta,
+			//0: naves, 1: empresa.naves
+			pointer : array_create(2, 0),
+			empresa : null_empresa,
+			viaje : null_viaje,
+			viaje_bool : false,
+			viaje_pos : 0,
+			recurso : array_create(recurso_max, 0),
+			misiones : array_create(0, null_mision),
+		}
+		array_disorder_push(naves, nave, 0)
+		return nave
+	}
+}

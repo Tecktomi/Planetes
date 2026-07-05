@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"comprar_recurso",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"comprar_recurso",
+  "parent":{
+    "name":"Planetes",
+    "path":"Planetes.yyp",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

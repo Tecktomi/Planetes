@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"string_struct",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"string_struct",
+  "parent":{
+    "name":"Planetes",
+    "path":"Planetes.yyp",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

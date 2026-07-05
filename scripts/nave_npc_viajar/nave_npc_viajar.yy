@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"nave_npc_viajar",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"nave_npc_viajar",
+  "parent":{
+    "name":"Planetes",
+    "path":"Planetes.yyp",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}
