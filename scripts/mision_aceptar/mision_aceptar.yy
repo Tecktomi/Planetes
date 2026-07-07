@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"mision_aceptar",
   "parent":{
-    "name":"Planetes",
-    "path":"Planetes.yyp",
+    "name":"Misiones",
+    "path":"folders/Misiones.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

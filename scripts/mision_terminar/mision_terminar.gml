@@ -30,7 +30,7 @@ function mision_terminar(mision = control.null_mision){
 						temp_text += $"\n{recurso_nombre[c]}: {floor(100 * mision.data.destino.recurso_fabrica[c])}%"
 			}
 			else if index = mis_electronicos and irandom(1)
-				mision.contratista.estado = 4
+				mision.contratista.estado = CRECIMIENTO
 			add_noticia("Misión cumplida", temp_text)
 			misiones_cumplidas++
 		}

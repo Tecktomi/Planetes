@@ -1,4 +1,4 @@
-function gui_panel(x, y, w, h, back = control.gui_panel_back, front = control.gui_panel_front, hover_color = control.gui_panel_hover, this_input_layer = 0, boton = mb_none, hover_function_bool = false, hover_function = function(param){}, hover_function_param = {}){
+function gui_panel(x, y, w, h, back = gui_panel_back, front = gui_panel_front, hover_color = gui_panel_hover, this_input_layer = 0, boton = mb_none, hover_function_bool = false, hover_function = function(param){}, hover_function_param = {}){
 	var color = draw_get_color()
 	var xx = draw_get_halign() = fa_left ? 0 : (draw_get_halign() = fa_center ? w / 2 : w)
 	var yy = draw_get_valign() = fa_top ? 0 : (draw_get_valign() = fa_middle ? h / 2 : h)

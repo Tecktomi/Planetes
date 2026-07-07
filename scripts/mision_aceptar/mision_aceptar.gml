@@ -214,7 +214,7 @@ function mision_aceptar(index, planeta = control.null_planeta, empresa = control
 			var temp_array_planetas = array_create(0, null_planeta)
 			for(var c = 0; c < array_length(planetas_no_gigantes); c++){
 				var temp_planeta = planetas_no_gigantes[c]
-				if temp_planeta != planeta and (temp_planeta.recurso[rec_comida] < 4 or temp_planeta.estado = 3)
+				if temp_planeta != planeta and (temp_planeta.recurso[rec_comida] < 4 or temp_planeta.estado = ESCASEZ)
 					array_push(temp_array_planetas, temp_planeta)
 			}
 			var destinos = array_create(0, null_planeta)

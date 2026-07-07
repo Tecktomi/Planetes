@@ -1,12 +1,12 @@
 {
   "$GMScript":"v1",
-  "%Name":"mision_cumplir",
+  "%Name":"draw_planeta",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"mision_cumplir",
+  "name":"draw_planeta",
   "parent":{
-    "name":"Misiones",
-    "path":"folders/Misiones.yy",
+    "name":"GUI",
+    "path":"folders/GUI.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

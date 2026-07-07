@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"menu_oficina",
   "parent":{
-    "name":"Planetes",
-    "path":"Planetes.yyp",
+    "name":"Menús",
+    "path":"folders/Menús.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

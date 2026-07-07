@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"draw_relaciones_imperios",
   "parent":{
-    "name":"Planetes",
-    "path":"Planetes.yyp",
+    "name":"GUI",
+    "path":"folders/GUI.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

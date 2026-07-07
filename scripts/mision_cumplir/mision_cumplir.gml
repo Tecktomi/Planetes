@@ -15,23 +15,23 @@ function mision_cumplir(mision = control.null_mision){
 		//Efectos de las misiones
 		if in(index, mis_desabastecer, mis_saturar_mercado, mis_espiar_planeta, mis_armas)
 			empresa.relacion_imperio[? planeta.imperio.index]--
-		if index = mis_armas and in(mision.data.destino.estado, 1, 6, 7) and irandom(1)
-			mision.data.destino.estado = 2
-		if index = mis_desabastecer and in(mision.data.destino.estado, 5, 7) and irandom(1){
+		if index = mis_armas and in(mision.data.destino.estado, TENSION, PROTESTAS, DICTADURA) and irandom(1)
+			mision.data.destino.estado = GUERRA
+		if index = mis_desabastecer and in(mision.data.destino.estado, BURBUJA, DICTADURA) and irandom(1){
 			var estado = mision.data.destino.estado
-			if estado = 5
-				mision.data.destino.estado = 3
-			else if estado = 7
-				mision.data.destino.estado = 6
+			if estado = BURBUJA
+				mision.data.destino.estado = ESCASEZ
+			else if estado = DICTADURA
+				mision.data.destino.estado = PROTESTAS
 		}
-		if index = mis_saturar_mercado and in(mision.data.destino.estado, 1, 4, 5) and irandom(1){
+		if index = mis_saturar_mercado and in(mision.data.destino.estado, TENSION, CRECIMIENTO, BURBUJA) and irandom(1){
 			var estado = mision.data.destino.estado
-			if estado = 1
-				mision.data.destino.estado = 4
-			else if estado = 4
-				mision.data.destino.estado = 5
-			else if estado = 5
-				mision.data.destino.estado = 3
+			if estado = TENSION
+				mision.data.destino.estado = CRECIMIENTO
+			else if estado = CRECIMIENTO
+				mision.data.destino.estado = BURBUJA
+			else if estado = BURBUJA
+				mision.data.destino.estado = ESCASEZ
 		}
 		if index = mis_salvar_fauna
 			mision.nave_asignada.origen.recurso_fabrica[rec_fauna] += 0.1

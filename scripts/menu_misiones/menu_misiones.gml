@@ -8,7 +8,7 @@ function menu_misiones(planeta = control.null_planeta){
 		var ypos = 100
 		draw_set_halign(fa_center)
 		if tutorial = 9
-			draw_text_background(rw2, 60, $"Aquí se muestran todas las misiones que este planeta ofrece por ahora\nToma la misión \"{mision_nombre[mis_artefacto]}\"", fa_center)
+			draw_text_background(RW2, 60, $"Aquí se muestran todas las misiones que este planeta ofrece por ahora\nToma la misión \"{mision_nombre[mis_artefacto]}\"", fa_center)
 		draw_text_pos(room_width / 2, ypos, "Misiones")
 		ypos += text_y + 30
 		if array_length(planeta.misiones) = 0

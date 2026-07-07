@@ -12,13 +12,13 @@ function menu_principal(planeta = control.null_planeta){
 		draw_set_halign(fa_center)
 		if tutorial != -1{
 			if tutorial = 1
-				draw_text_background(rw2, 60, "Aquí puedes interactuar con el planeta\nHaz clic en Mercado", fa_center)
+				draw_text_background(RW2, 60, "Aquí puedes interactuar con el planeta\nHaz clic en Mercado", fa_center)
 			if tutorial = 4
-				draw_text_background(rw2, 60, "Perfecto, ahora haz clic derecho para salir del mercado", fa_center)
+				draw_text_background(RW2, 60, "Perfecto, ahora haz clic derecho para salir del mercado", fa_center)
 			if tutorial = 7
-				draw_text_background(rw2, 60, "Perfecto, ahora vende aquí algo de lo que hayas comprado", fa_center)
+				draw_text_background(RW2, 60, "Perfecto, ahora vende aquí algo de lo que hayas comprado", fa_center)
 			if tutorial = 8
-				draw_text_background(rw2, 60, "Ahora vamos a buscar una misión\nHaz clic en Misiones", fa_center)
+				draw_text_background(RW2, 60, "Ahora vamos a buscar una misión\nHaz clic en Misiones", fa_center)
 		}
 		var ypos = 100
 		draw_text_pos(room_width / 2, ypos, planeta.nombre)

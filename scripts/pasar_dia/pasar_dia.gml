@@ -10,7 +10,7 @@ function pasar_dia(){
 				planeta.y = planeta.luna.y + sin(planeta.fase) * planeta.radio
 			}
 			else{
-				planeta.x = room_width / 2 + (cos(planeta.fase) + excentricidad) * planeta.radio
+				planeta.x = room_width / 2 + (cos(planeta.fase) + EXCENTRICIDAD) * planeta.radio
 				planeta.y = room_height / 2 + sin(planeta.fase) * planeta.radio * 0.9
 			}
 		}
@@ -157,49 +157,48 @@ function pasar_dia(){
 				if random(1) < 0.3{
 					var estado = planeta.estado, temp_array = array_create(0, 0), arquetipo = planeta.arquetipo, estado_repeat = floor(planeta.estado_repeat / 3)
 					//Estable
-					if estado = 0{
-						temp_array = [0, 0, 1, 4]
-						if arquetipo = 4 {repeat(estado_repeat) array_push(temp_array, 1)}
+					if estado = ESTABLE{
+						temp_array = [ESTABLE, ESTABLE, TENSION, CRECIMIENTO]
+						if arquetipo = MILITAR {repeat(estado_repeat) array_push(temp_array, TENSION)}
 					}
 					//Tensión
-					else if estado = 1{
-						temp_array = [0, 1, 2, 6]
-						repeat(planeta.estado_repeat) array_push(temp_array, 2, 6)
-						if arquetipo = 1 {repeat(estado_repeat) array_push(temp_array, 8)}
-						else if arquetipo = 3 {repeat(estado_repeat) array_push(temp_array, 0, 6)}
-						else if arquetipo = 4 {repeat(estado_repeat) array_push(temp_array, 2)}
+					else if estado = TENSION{
+						temp_array = [ESTABLE, TENSION, GUERRA, PROTESTAS]
+						repeat(planeta.estado_repeat) array_push(temp_array, GUERRA, PROTESTAS)
+						if arquetipo = TECNOCRATA {repeat(estado_repeat) array_push(temp_array, REFORMAS)}
+						else if arquetipo = DIPLOMATICO {repeat(estado_repeat) array_push(temp_array, TENSION, PROTESTAS)}
+						else if arquetipo = MILITAR {repeat(estado_repeat) array_push(temp_array, GUERRA)}
 					}
 					//Guerra
-					else if estado = 2{
-						temp_array = [1, 2, 3, 7]
-						repeat(planeta.estado_repeat) array_push(temp_array, 8)
-						if arquetipo = 3 {repeat(estado_repeat) array_push(temp_array, 1)}
-						else if arquetipo = 4 {repeat(estado_repeat) array_push(temp_array, 7)}
+					else if estado = GUERRA{
+						temp_array = [TENSION, GUERRA, ESCASEZ, DICTADURA]
+						repeat(planeta.estado_repeat) array_push(temp_array, REFORMAS)
+						if arquetipo = DIPLOMATICO {repeat(estado_repeat) array_push(temp_array, TENSION)}
+						else if arquetipo = MILITAR {repeat(estado_repeat) array_push(temp_array, DICTADURA)}
 					}
 					//Escasez
-					else if estado = 3{
-						temp_array = [0, 1, 6]
-						repeat(planeta.estado_repeat) array_push(temp_array, 8)
-						if arquetipo = 0 {repeat(estado_repeat) array_push(temp_array, 7)}
-						else if arquetipo = 1 {repeat(estado_repeat) array_push(temp_array, 8)}
-						else if arquetipo = 2 {repeat(estado_repeat) array_push(temp_array, 8)}
-						else if arquetipo = 3 {repeat(estado_repeat) array_push(temp_array, 0)}
+					else if estado = ESCASEZ{
+						temp_array = [ESTABLE, TENSION, PROTESTAS]
+						repeat(planeta.estado_repeat) array_push(temp_array, REFORMAS)
+						if arquetipo = MERCANTIL {repeat(estado_repeat) array_push(temp_array, DICTADURA)}
+						else if in(arquetipo, TECNOCRATA, ECOLOGISTA) {repeat(estado_repeat) array_push(temp_array, REFORMAS)}
+						else if arquetipo = DIPLOMATICO {repeat(estado_repeat) array_push(temp_array, ESTABLE)}
 					}
 					//Crecimiento
-					else if estado = 4{
-						temp_array = [0, 4, 5]
-						if arquetipo = 0 {repeat(estado_repeat) array_push(temp_array, 5)}
-						else if arquetipo = 2 {repeat(estado_repeat) array_push(temp_array, 6)}
+					else if estado = CRECIMIENTO{
+						temp_array = [ESTABLE, CRECIMIENTO, BURBUJA]
+						if arquetipo = MERCANTIL {repeat(estado_repeat) array_push(temp_array, CRECIMIENTO)}
+						else if arquetipo = ECOLOGISTA {repeat(estado_repeat) array_push(temp_array, BURBUJA)}
 					}
 					//Burbuja
-					else if estado = 5{
-						temp_array = [3, 4, 6]
-						if arquetipo = 0 {repeat(estado_repeat) array_push(temp_array, 4)}
+					else if estado = BURBUJA{
+						temp_array = [ESCASEZ, CRECIMIENTO, PROTESTAS]
+						if arquetipo = MERCANTIL {repeat(estado_repeat) array_push(temp_array, ESCASEZ)}
 					}
 					//Protestas
-					else if estado = 6{
-						temp_array = [0, 2, 7, 8]
-						if arquetipo = 2 {repeat(estado_repeat) array_push(temp_array, 0)}
+					else if estado = PROTESTAS{
+						temp_array = [ESTABLE, GUERRA, PROTESTAS, DICTADURA]
+						if arquetipo = ECOLOGISTA {repeat(estado_repeat) array_push(temp_array, ESTABLE)}
 						//Independencia
 						if random(1) > (9 + array_length(imperios)) / (9 + array_length(planeta.imperio)) / (1 + 2 * (arquetipo != planeta.imperio.arquetipo)){
 							var imperio = add_imperio(), prev_imperio = planeta.imperio
@@ -221,18 +220,18 @@ function pasar_dia(){
 						}
 					}
 					//Dictadura
-					else if estado = 7{
-						temp_array = [1, 6, 7]
-						repeat(planeta.estado_repeat) array_push(temp_array, 8)
-						if arquetipo = 0 {repeat(estado_repeat) array_push(temp_array, 3, 4)}
-						else if arquetipo = 1 {repeat(estado_repeat) array_push(temp_array, 8)}
-						else if arquetipo = 2 {repeat(estado_repeat) array_push(temp_array, 6)}
-						else if arquetipo = 4 {repeat(estado_repeat) array_push(temp_array, 2)}
+					else if estado = DICTADURA{
+						temp_array = [TENSION, PROTESTAS, DICTADURA]
+						repeat(planeta.estado_repeat) array_push(temp_array, REFORMAS)
+						if arquetipo = MERCANTIL {repeat(estado_repeat) array_push(temp_array, ESCASEZ, CRECIMIENTO)}
+						else if arquetipo = TECNOCRATA {repeat(estado_repeat) array_push(temp_array, REFORMAS)}
+						else if arquetipo = ECOLOGISTA {repeat(estado_repeat) array_push(temp_array, PROTESTAS)}
+						else if arquetipo = MILITAR {repeat(estado_repeat) array_push(temp_array, GUERRA)}
 					}
 					//Reformas
-					else if estado = 8{
-						temp_array = [0, 1, 4, 5, 6]
-						if arquetipo = 1 {repeat(estado_repeat) array_push(temp_array, 0)}
+					else if estado = REFORMAS{
+						temp_array = [ESTABLE, TENSION, CRECIMIENTO, BURBUJA, PROTESTAS]
+						if arquetipo = TECNOCRATA {repeat(estado_repeat) array_push(temp_array, ESTABLE)}
 					}
 					planeta.estado = array_choose(temp_array)
 				}

@@ -1,15 +1,29 @@
 randomize()
 draw_set_font(ft_letra)
 cursor = cr_default
-ini_open("tutorial.ini")
-tutorial = ini_read_real("Global", "tutorial", 0)
-ini_close()
-tutorial_step = 0
 //Definiciones
+#region Macros
+	#macro DIS_PLANET_NAME 10_000
+	#macro DIS_PLANET_CLIC 255
+	#macro ZOOM_MAX 5
+	#macro EXCENTRICIDAD sqrt(0.19)
+	#macro IA_INTENTOS_VIAJES 10
+	#macro RW2 room_width / 2
+	#macro RH2 room_height / 2
+#endregion
 #region Estados
 	estado_nombre = ["Estable", "Tensión", "Guerra", "Escasez", "Crecimiento", "Burbuja", "Protestas", "Dictadura", "Reformas"]
 	estado_color = [c_gray, make_color_rgb(127, 63, 63), make_color_rgb(127, 0, 0), make_color_rgb(127, 127, 63), make_color_rgb(63, 255, 63), make_color_rgb(63, 255, 255), make_color_rgb(191, 63, 127), make_color_rgb(63, 0, 63), make_color_rgb(255, 191, 31)]
 	estado_max = array_length(estado_nombre)
+	#macro ESTABLE 0
+	#macro TENSION 1
+	#macro GUERRA 2
+	#macro ESCASEZ 3
+	#macro CRECIMIENTO 4
+	#macro BURBUJA 5
+	#macro PROTESTAS 6
+	#macro DICTADURA 7
+	#macro REFORMAS 8
 #endregion
 #region Recursos
 	recurso_nombre = array_create(0, "")
@@ -44,6 +58,11 @@ tutorial_step = 0
 #endregion
 #region Arquetipos
 	arquetipo_nombre = ["Mercantil", "Tecnócrata", "Ecologistas", "Diplomático", "Militar"]
+	#macro MERCANTIL 0
+	#macro TECNOCRATA 1
+	#macro ECOLOGISTA 2
+	#macro DIPLOMATICO 3
+	#macro MILITAR 4
 	arquetipo_max = array_length(arquetipo_nombre)
 	arquetipo_recurso_frecuencia = [
 		[2, 2, 1, 2, 3, 2, 2, 2, 2],
@@ -318,7 +337,24 @@ tutorial_step = 0
 	draw_background_text = ""
 	draw_background_halign = fa_center
 #endregion
-tipos_planetas = ["Hielo", "Rocoso", "Metálico", "Gigante"]
+#region Tutorial
+	ini_open("tutorial.ini")
+	tutorial = ini_read_real("Global", "tutorial", 0)
+	ini_close()
+	tutorial_step = 0
+	tutorial_text = [
+		["Bienvenido a PLANETES\nHaz clic en abrir comunicación"],
+		[""],[""],[""],[""],
+		["Ahora haz clic en otro planeta para viajar a él"],
+		["Mantén presionada la barra espaciadadora para adelantar el tiempo"],
+		["Perfecto, ahora vende aquí algo de lo que hayas comprado"],
+		["Este es el sistema estelar, tu misión te pide ir a {0}",
+			"Esta misión pide viajar a {0} que está muy lejos\nGira la rueda del mouse para ver el sistema estelar completo"],
+		["El viaje puede ser largo\nShift + Espacio para adelantar el tiempo más rápido"],
+		["Aquí solo debes buscar el artefacto, en alguna de estas lunas debe estar"],
+		["¡Bien hecho!\nCuando termines una misión recuerda siempre volver al planeta de origen"],
+		["Eso es todo por ahora\nExplora todos los mundos que quieras, comercia, cumple misiones y\ncorónate como el mayor mercader el sistema estelar"]]
+#endregion
 null_viaje = {
 	dis : 0,
 	x : 0,
@@ -356,7 +392,6 @@ null_planeta = {
 	gigante : false,
 	luna_externa : false,
 	imperio : undefined,
-	luna_externa : false,
 	tipo : 0
 }
 null_planeta.luna = null_planeta
@@ -465,6 +500,7 @@ planetas_terrestres_gigantes = array_create(0, null_planeta)
 planetas_internos = array_create(0, null_planeta)
 planeta_mouse = null_planeta
 planeta_mouse_bool = false
+min_dis = infinity
 planeta_select_bool = true
 viaje = null_viaje
 viaje_bool = false
@@ -488,11 +524,8 @@ misiones_falladas = 0
 subsistema_vista = false
 subsistema = null_planeta
 zoom = 1
-rw2 = room_width / 2
-rh2 = room_height / 2
-camx = rw2
-camy = rh2
-excentricidad = sqrt(0.19)
+camx = RW2
+camy = RH2
 counter_planeta = 0
 counter_nave = 0
 counter_empresa = 0
@@ -538,7 +571,7 @@ repeat(planeta_max){
 		array_push(planetas_terrestres_sin_lunas, planeta)
 		do planeta.radio = random_range(70, 320)
 		until check_orbit(,, planeta.radio)
-		planeta.x = room_width / 2 + (cos(planeta.fase) + excentricidad) * planeta.radio
+		planeta.x = room_width / 2 + (cos(planeta.fase) + EXCENTRICIDAD) * planeta.radio
 		planeta.y = room_height / 2 + sin(planeta.fase) * planeta.radio * 0.9
 		planeta.size = random_range(8, 15)
 		planeta.tipo = weighted_choose([planeta.radio / 70 - 1, 1, 2 - planeta.radio / 320])
@@ -578,7 +611,7 @@ repeat(4){
 	array_push(planetas_gigantes, planeta)
 	array_push(planetas_terrestres_gigantes, planeta)
 	planeta.radio = 500 + 250 * array_length(planetas_gigantes)
-	planeta.x = room_width / 2 + (cos(planeta.fase) + excentricidad) * planeta.radio
+	planeta.x = room_width / 2 + (cos(planeta.fase) + EXCENTRICIDAD) * planeta.radio
 	planeta.y = room_height / 2 + sin(planeta.fase) * planeta.radio * 0.9
 	planeta.size = random_range(25, 40)
 	planeta.tipo = 3
@@ -665,6 +698,3 @@ repeat(5){
 	empresa.nombre = $"Empresa {array_length(empresas) - 1}"
 	empresa.dinero = irandom_range(100, 150)
 }
-//DEBUG
-for(var a = 0; a < planeta_total; a++)
-	show_debug_message(planetas[a].recurso_fabrica)

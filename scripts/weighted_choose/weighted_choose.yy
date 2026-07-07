@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"weighted_choose",
   "parent":{
-    "name":"Planetes",
-    "path":"Planetes.yyp",
+    "name":"System",
+    "path":"folders/System.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

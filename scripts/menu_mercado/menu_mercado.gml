@@ -11,13 +11,13 @@ function menu_mercado(planeta = control.null_planeta){
 		draw_set_halign(fa_center)
 		if tutorial != -1{
 			if tutorial = 2
-				draw_text_background(rw2, 60, "Aquí puedes comprar y vender mercancías\nCompra algo para cargarlo a tu nave", fa_center)
+				draw_text_background(RW2, 60, "Aquí puedes comprar y vender mercancías\nCompra algo para cargarlo a tu nave", fa_center)
 			if tutorial = 3
-				draw_text_background(rw2, 60, "Perfecto, ahora haz clic derecho para salir del mercado", fa_center)
+				draw_text_background(RW2, 60, "Perfecto, ahora haz clic derecho para salir del mercado", fa_center)
 			if tutorial = 7
-				draw_text_background(rw2, 60, "Perfecto, ahora vende aquí algo de lo que hayas comprado", fa_center)
+				draw_text_background(RW2, 60, "Perfecto, ahora vende aquí algo de lo que hayas comprado", fa_center)
 			if tutorial = 8
-				draw_text_background(rw2, 60, "Muy bien, has sellado tu primer trato\nLa regla de oro para los negocios es comprar barato y vender caro", fa_center)
+				draw_text_background(RW2, 60, "Muy bien, has sellado tu primer trato\nLa regla de oro para los negocios es comprar barato y vender caro", fa_center)
 		}
 		draw_text_pos(room_width / 2, ypos, $"Mercado ${jugador.dinero}")
 		ypos += text_y + 30
@@ -83,8 +83,8 @@ function menu_mercado(planeta = control.null_planeta){
 							if mision.index = mis_saturar_mercado and mision.data.destino = planeta and mision.data.recurso = a and precio_recurso(a, planeta, false) <= mision.data.precio
 								mision_cumplir(mision)
 							if mision.index = mis_comida and a = rec_comida and array_contains(mision.data.destinos, planeta) and planeta.recurso[rec_comida] >= 4{
-								if planeta.estado == 3 and irandom(1)
-									planeta.estado = 0
+								if planeta.estado = ESCASEZ and irandom(1)
+									planeta.estado = ESTABLE
 								array_remove(mision.data.destinos, planeta)
 								var len = array_length(mision.data.destinos)
 								if len = 2
