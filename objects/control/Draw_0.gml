@@ -87,7 +87,7 @@ else{
 	//Lunas gigantes gaseosos
 	else if subsistema.gigante{
 		draw_set_halign(fa_center)
-		draw_planeta(subsistema, RW2, RH2)
+		draw_planeta(subsistema, RW2, RH2, false)
 		draw_text(RW2, 40, $"Sistema planetario de {subsistema.nombre}")
 		for(var a = array_length(subsistema.lunas) - 1; a >= 0; a--){
 			var planeta = subsistema.lunas[a]
@@ -303,13 +303,11 @@ if tutorial != -1{
 		draw_text_background(RW2, 60, string(tutorial_text[tutorial, (not subsistema_vista)], jugador.misiones[0].data.destino.luna.nombre), fa_center)
 	else{
 		draw_text_background(RW2, 60, tutorial_text[tutorial, 0], fa_center)
-		if tutorial = 14{
-			if tutorial_step++ = 600{
-				tutorial = -1
-				ini_open("tutorial.ini")
-				ini_write_real("Global", "tutorial", -1)
-				ini_close()
-			}
+		if tutorial = 14 and tutorial_step++ = 600{
+			tutorial = -1
+			ini_open("tutorial.ini")
+			ini_write_real("Global", "tutorial", -1)
+			ini_close()
 		}
 	}
 }

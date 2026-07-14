@@ -344,10 +344,15 @@ cursor = cr_default
 	tutorial_step = 0
 	tutorial_text = [
 		["Bienvenido a PLANETES\nHaz clic en abrir comunicación"],
-		[""],[""],[""],[""],
+		["Aquí puedes interactuar con el planeta\nHaz clic en Mercado"],
+		["Aquí puedes comprar y vender mercancías\nCompra algo para cargarlo a tu nave"],
+		["Perfecto, ahora haz clic derecho para salir del mercado"],
+		["Perfecto, ahora haz clic derecho para salir del mercado"],
 		["Ahora haz clic en otro planeta para viajar a él"],
 		["Mantén presionada la barra espaciadadora para adelantar el tiempo"],
 		["Perfecto, ahora vende aquí algo de lo que hayas comprado"],
+		["Ahora vamos a buscar una misión\nHaz clic en Misiones"],
+		[ $"Aquí se muestran todas las misiones que este planeta ofrece por ahora\nToma la misión {mision_nombre[mis_artefacto]}"],
 		["Este es el sistema estelar, tu misión te pide ir a {0}",
 			"Esta misión pide viajar a {0} que está muy lejos\nGira la rueda del mouse para ver el sistema estelar completo"],
 		["El viaje puede ser largo\nShift + Espacio para adelantar el tiempo más rápido"],

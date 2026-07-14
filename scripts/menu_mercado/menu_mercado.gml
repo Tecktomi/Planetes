@@ -9,16 +9,8 @@ function menu_mercado(planeta = control.null_planeta){
 		}
 		var ypos = 100
 		draw_set_halign(fa_center)
-		if tutorial != -1{
-			if tutorial = 2
-				draw_text_background(RW2, 60, "Aquí puedes comprar y vender mercancías\nCompra algo para cargarlo a tu nave", fa_center)
-			if tutorial = 3
-				draw_text_background(RW2, 60, "Perfecto, ahora haz clic derecho para salir del mercado", fa_center)
-			if tutorial = 7
-				draw_text_background(RW2, 60, "Perfecto, ahora vende aquí algo de lo que hayas comprado", fa_center)
-			if tutorial = 8
-				draw_text_background(RW2, 60, "Muy bien, has sellado tu primer trato\nLa regla de oro para los negocios es comprar barato y vender caro", fa_center)
-		}
+		if in(tutorial, 2, 3, 7)
+			draw_text_background(RW2, 60, tutorial_text[tutorial, 0], fa_center)
 		draw_text_pos(room_width / 2, ypos, $"Mercado ${jugador.dinero}")
 		ypos += text_y + 30
 		draw_set_halign(fa_left)
