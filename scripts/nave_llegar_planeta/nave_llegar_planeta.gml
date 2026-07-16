@@ -95,8 +95,8 @@ function nave_llegar_planeta(nave = control.null_nave){
 			if batalla and nave_select_bool and not nave_select.viaje_bool and nave.destino = nave_select.origen{
 				batalla_planeta = nave.destino
 				batalla_naves = [
-					add_batalla_nave(nave_select,,,,, 100),
-					add_batalla_nave(nave, 600, 400, -20, 0.5, 100)]
+					add_batalla_nave(nave_select,,,,, nave_select.hp),
+					add_batalla_nave(nave, 600, 400, 120, 0.5, nave.hp)]
 			}
 			var mision = (array_length(nave.misiones) = 0 ? null_mision : nave.misiones[0]), mision_index = mision.index
 			var flag_saturar_2 = (mision_index = mis_saturar_mercado and mision.data.destino = planeta)

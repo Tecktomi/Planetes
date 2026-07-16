@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"scr_batalla",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"scr_batalla",
+  "parent":{
+    "name":"Planetes",
+    "path":"Planetes.yyp",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

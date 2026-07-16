@@ -6,7 +6,9 @@ function add_batalla_nave(_nave = control.null_nave, _x = 0, _y = 0, _dir = 0, _
 			y : _y,
 			dir : _dir,
 			vel : _vel,
-			hp : _hp
+			hp : _hp,
+			step : 0,
+			diff : 0
 		}
 		return new_nave
 	}

@@ -24,63 +24,7 @@ var max_viaje = infinity, var_zoom = ZOOM_MAX - zoom
 draw_sprite_stretched(background, 0, -room_width * var_zoom / 60, -room_height * var_zoom / 60, room_width * (1 + var_zoom / 30), room_height * (1 + var_zoom / 30))
 //Batallas
 if batalla_planeta != null_planeta{
-	for(var a = array_length(batalla_naves) - 1; a >= 0; a--){
-		with batalla_naves[a]{
-			draw_sprite_ext(spr_nave, 0, x, y, 2, 2, dir, c_white, 1)
-			draw_text(x, y, hp)
-			x += vel * cos(degtorad(dir))
-			y -= vel * sin(degtorad(dir))
-		}
-	}
-	draw_set_color(c_yellow)
-	for(var a = array_length(batalla_balas) - 1; a >= 0; a--)
-		with batalla_balas[a]{
-			var flag = false
-			draw_circle(x, y, 2, false)
-			repeat(vel){
-				x += hmove
-				y += vmove
-				for(var b = array_length(other.batalla_naves) - 1; b >= 0; b--){
-					var temp_nave = other.batalla_naves[b]
-					if temp_nave != home and distance_sqr(x, y, temp_nave.x, temp_nave.y) < 255{
-						temp_nave.hp -= 20
-						if temp_nave.hp <= 0{
-							delete_nave(temp_nave.nave)
-							control.batalla = false
-							control.batalla_planeta = control.null_planeta
-							exit
-						}
-						flag = true
-						break
-					}
-				}
-				if flag
-					break
-			}
-			if x < 0 or y < 0 or x > room_width or y > room_height or flag{
-				array_remove(other.batalla_balas, self)
-				continue
-			}
-		}
-	draw_set_color(c_white)
-	draw_set_alpha(0.5)
-	//Control manual
-	with batalla_naves[0]{
-		if abs(vel) > 0.01
-			vel *= 0.95
-		else
-			vel = 0
-		if mouse_check_button(mb_any){
-			draw_line(x, y, mouse_x, mouse_y)
-			var diff = angle_difference(point_direction(x, y, mouse_x, mouse_y), dir) / 20
-			dir += diff
-			if mouse_check_button(mb_left)
-				vel += 0.4 / max(1, sqrt(abs(diff)))
-		}
-		if keyboard_check_pressed(vk_space)
-			add_batalla_bala(x, y, cos(degtorad(dir)), -sin(degtorad(dir)), 15, self)
-	}
-	draw_set_alpha(1)
+	scr_batalla()
 	draw_end()
 	exit
 }

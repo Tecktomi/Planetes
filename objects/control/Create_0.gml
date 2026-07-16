@@ -413,6 +413,8 @@ null_nave = {
 	viaje_pos : 0,
 	recurso : array_create(0, 0),
 	misiones : undefined,
+	modelo : 0,
+	hp : 0
 }
 naves = array_create(0, null_nave)
 null_empresa = {
@@ -544,7 +546,9 @@ counter_imperio = 0
 		y : 0,
 		dir : 0,
 		vel : 0,
-		hp : 0
+		hp : 0,
+		step : 0,
+		diff : 0
 	}
 	batalla_naves = array_create(0, null_batalla_nave)
 	null_batalla_bala = {
@@ -553,9 +557,23 @@ counter_imperio = 0
 		hmove : 0,
 		vmove : 0,
 		vel : 0,
-		home : null_batalla_nave
+		home : null_batalla_nave,
+		pointer : array_create(0, 0)
 	}
 	batalla_balas = array_create(0, null_batalla_bala)
+	null_batalla_asteroide = {
+		x : 0,
+		y : 0,
+		hmove : 0,
+		vmove : 0,
+		rot : 0,
+		angle : 0,
+		tipo : 0,
+		pointer : array_create(0, 0)
+	}
+	batalla_asteroides = array_create(0, null_batalla_asteroide)
+	batalla_step = 0
+	batalla_loser = null_batalla_nave
 #endregion
 imperios_eliminados = array_create(0, null_imperio)
 //Imperios
