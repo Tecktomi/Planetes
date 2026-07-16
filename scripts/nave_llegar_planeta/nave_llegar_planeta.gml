@@ -91,6 +91,13 @@ function nave_llegar_planeta(nave = control.null_nave){
 		}
 		//Empresas al llegar a un planeta
 		else{
+			//Entrar en batalla
+			if batalla and nave_select_bool and not nave_select.viaje_bool and nave.destino = nave_select.origen{
+				batalla_planeta = nave.destino
+				batalla_naves = [
+					add_batalla_nave(nave_select,,,,, 100),
+					add_batalla_nave(nave, 600, 400, -20, 0.5, 100)]
+			}
 			var mision = (array_length(nave.misiones) = 0 ? null_mision : nave.misiones[0]), mision_index = mision.index
 			var flag_saturar_2 = (mision_index = mis_saturar_mercado and mision.data.destino = planeta)
 			var flag_comida_2 = (mision_index = mis_comida and array_contains(mision.data.destinos, planeta))

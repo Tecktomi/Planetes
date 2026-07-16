@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"add_batalla_bala",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"add_batalla_bala",
+  "parent":{
+    "name":"ADD",
+    "path":"folders/ADD.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

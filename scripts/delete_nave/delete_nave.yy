@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"delete_nave",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"delete_nave",
+  "parent":{
+    "name":"ADD",
+    "path":"folders/ADD.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

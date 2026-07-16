@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"delete_empresa",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"delete_empresa",
+  "parent":{
+    "name":"ADD",
+    "path":"folders/ADD.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

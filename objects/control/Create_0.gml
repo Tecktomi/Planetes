@@ -535,6 +535,28 @@ counter_planeta = 0
 counter_nave = 0
 counter_empresa = 0
 counter_imperio = 0
+#region Batalla
+	batalla = false
+	batalla_planeta = null_planeta
+	null_batalla_nave = {
+		nave : null_nave,
+		x : 0,
+		y : 0,
+		dir : 0,
+		vel : 0,
+		hp : 0
+	}
+	batalla_naves = array_create(0, null_batalla_nave)
+	null_batalla_bala = {
+		x : 0,
+		y : 0,
+		hmove : 0,
+		vmove : 0,
+		vel : 0,
+		home : null_batalla_nave
+	}
+	batalla_balas = array_create(0, null_batalla_bala)
+#endregion
 imperios_eliminados = array_create(0, null_imperio)
 //Imperios
 imperios_max = 10
@@ -682,10 +704,8 @@ for(var a = array_length(imperios) - 1; a >= 0; a--){
 //Jugador
 jugador = add_empresa()
 jugador.dinero = 1000
-nave_select = add_nave()
+nave_select = add_nave(jugador)
 nave_select_bool = true
-array_disorder_push(jugador.naves, nave_select, 1)
-nave_select.empresa = jugador
 nave_select.origen = array_choose(planetas_terrestres)
 last_path = array_create(5, null_planeta)
 last_path[0] = nave_select.origen
@@ -694,9 +714,7 @@ last_path_index = 0
 repeat(5){
 	var empresa = add_empresa()
 	repeat(3){
-		var nave = add_nave()
-		nave.empresa = empresa
-		array_disorder_push(empresa.naves, nave, 1)
+		var nave = add_nave(empresa)
 		nave.destino = planetas_no_gigantes[irandom(array_length(planetas_no_gigantes) - 1)]
 		nave.viaje_bool = true
 	}
