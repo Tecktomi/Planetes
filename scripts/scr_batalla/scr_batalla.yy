@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"scr_batalla",
   "parent":{
-    "name":"Planetes",
-    "path":"Planetes.yyp",
+    "name":"Batalla",
+    "path":"folders/Batalla.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

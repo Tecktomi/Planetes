@@ -103,6 +103,7 @@ cursor = cr_default
 		for(var b = 0; b < arquetipo_max; b++)
 			array_set(arquetipo_relacion_positiva[a], b, 4 - arquetipo_relacion_negativa[a, b])
 	}
+	arquetipo_pirateria = [2, 1, 1, 2, 2]
 	#region Frases de Arquetipos
 	arquetipo_saludo = [[
 		"Es un placer recibir a alguien con tu reputación. Espero que podamos hacer buenos tratos.",
@@ -180,13 +181,31 @@ cursor = cr_default
 	mis_armas = def_mision("Economía de guerra", 20, 0, 3, 2)
 	mis_artefacto = def_mision("Encontrar artefacto", 15, 0, 1, 1)
 	mis_viaje_express = def_mision("Viaje express", 10, -1, 2, 1)
+	mis_pirateria = def_mision("Piratería", 20, 4, 2, 2)
 	mision_max = array_length(mision_nombre)
 	arquetipo_mision_frecuencia = [
-		[3, 3, 2, 3, 2, 1, 2, 0, 0, 0, 2, 0, 3, 1],
-		[3, 1, 2, 0, 2, 3, 2, 3, 0, 0, 1, 0, 1, 2],
-		[2, 2, 2, 0, 3, 2, 1, 0, 3, 0, 1, 0, 2, 3],
-		[4, 2, 2, 0, 1, 2, 3, 0, 0, 3, 0, 0, 2, 2],
-		[2, 3, 2, 0, 1, 2, 3, 0, 0, 0, 2, 3, 2, 1]]
+		[3, 3, 2, 3, 2, 1, 2, 0, 0, 0, 2, 0, 3, 1, 2],
+		[3, 1, 2, 0, 2, 3, 2, 3, 0, 0, 1, 0, 1, 2, 1],
+		[2, 2, 2, 0, 3, 2, 1, 0, 3, 0, 1, 0, 2, 3, 1],
+		[4, 2, 2, 0, 1, 2, 3, 0, 0, 3, 0, 0, 2, 2, 0],
+		[2, 3, 2, 0, 1, 2, 3, 0, 0, 0, 2, 3, 2, 1, 3]]
+	mision_texto = [
+		["Viajar a {0}", "Ahora viaja a {0}"],
+		["Compra todo el {0} de {1}"],
+		["Visita {0}, {1} y {2}", "Visita {0} y {1}", "Visita {0}"],
+		["Baja el precio de venta de {0} en {1} a ${2}"],
+		["Acumula {0} de {1} en tu nave"],
+		["Viaja a {0} y espera a que {1} naves pasen por ahí", "Quédate en {0} y espera a que {1} naves pasen por ahí"],
+		["Viaja a {0}, una vez ahí, quédate {1} días sin que nadie te vea", "Quédate en {0} {1} días sin que nadie te vea"],
+		["Tráenos electrónicos de {0}, {1} y {2}", "Tráenos electrónicos de {0} y {1}", "Tráenos electrónicos de {0}"],
+		["Lleva 5 animales a una oficina comercial y déjalos ahí {0} días", "Deja los animales en la oficina comercial por {0} días"],
+		["Lleva al menos 4 de comida a {0}, {1} y {2}", "Lleva al menos 4 de comida a {0} y {1}", "Lleva al menos 4 de comida a {0}"],
+		["Falla en una misión del planeta {0}"],
+		["Lleva {0} armas a una oficina comercial en {1} y déjalas ahí, sin pasar por el mercado","Lleva {0} armas más a la oficina comercial en {1} y déjalas ahí, sin pasar por el mercado"],
+		["Busca el artefacto perdido entre las lunas de {0}"],
+		["Viaja a {0} cuando el viaje a este dure menos de {1} días"],
+		["Viaja a {0}, una vez ahí, asalta a la primera nave que llegue", "Quédate en {0} y asalta a la primera nave que llegue"]
+	]
 	#region tag_mision_multiple
 		tag_mision_multiple = array_create(mision_max, false)
 		tag_mision_multiple[mis_recoger_informacion] = true
@@ -203,11 +222,20 @@ cursor = cr_default
 		tag_mision_planeta[mis_fallar] = true
 		tag_mision_planeta[mis_armas] = true
 		tag_mision_planeta[mis_viaje_express] = true
+		tag_mision_planeta[mis_pirateria] = true
 	#endregion
 	#region tag_mision_espiar
 		tag_mision_espiar = array_create(mision_max, false)
 		tag_mision_espiar[mis_espiar_empresas] = true
 		tag_mision_espiar[mis_espiar_planeta] = true
+	#endregion
+	#region tag_mision_ia
+		tag_mision_ia = array_create(mision_max, true)
+		tag_mision_ia[mis_armas] = false
+		tag_mision_ia[mis_salvar_fauna] = false
+		tag_mision_ia[mis_fallar] = false
+		tag_mision_ia[mis_viaje_express] = false
+		tag_mision_ia[mis_pirateria] = false
 	#endregion
 #endregion
 #region Descripciones de misiones
@@ -225,7 +253,8 @@ cursor = cr_default
 		"Nuestra competencia se está desarrollando demasiado rápido, hazles perder el tiempo.",
 		"",
 		"Hay rumores de un posible... tesoro perdido. Naturalmente estamos interesados, imagina lo que podría llegar a costar.",
-		"Acabamos de sacar un nuevo moledo telésfera que queremos patentar, pero debemos asegurarnos de que el viaje sea lo más corto posible para evitar que nos roben la idea. Espera a que la órbita pase lo más cerca posible y ve."
+		"Acabamos de sacar un nuevo moledo telésfera que queremos patentar, pero debemos asegurarnos de que el viaje sea lo más corto posible para evitar que nos roben la idea. Espera a que la órbita pase lo más cerca posible y ve.",
+		"Verás... A veces el miedo puede ser un potente insentivo para invertir en seguridad, por lo que necesitamos amm... Emocionar... A cierto público."
 		], [
 	    "El traslado de recursos es un proceso logístico. Optimízalo y completa la ruta asignada.",
 	    "Necesitamos datos empíricos sobre la reacción de un mercado ante la ausencia total de un recurso.",
@@ -240,7 +269,8 @@ cursor = cr_default
 		"Las ideas arcaicas caen desde adentro. Infíltrate y hazles perder tiempo y recursos.",
 		"",
 		"Nos gustaría que buscaras una pieza de tecnología antigua para investigarla y reirnos un poco de lo subdesarrollados que eran.",
-		"Necesitamos llevar un nuevo calibrador de neutrinos, aquí funciona bien, pero si se expone al espacio interplanetario, se desconfigurará. Optimiza la ruta para exponerlo lo menos posible a los vientos solares."
+		"Necesitamos llevar un nuevo calibrador de neutrinos, aquí funciona bien, pero si se expone al espacio interplanetario, se desconfigurará. Optimiza la ruta para exponerlo lo menos posible a los vientos solares.",
+		"Nuestros informes hablan de un lugar donde se trafican datos de manera ilegal, tienes que detener esto."
 		], [
 	    "A veces hay que empujar un poco las cosas en pro de mantener el equilibrio en el cosmos.",
 	    "Nuestros recursos no deben caer en manos equivocadas. Elimina su disponibilidad en ese mundo.",
@@ -255,7 +285,8 @@ cursor = cr_default
 		"EL sabotaje es la única opción. Ve y falla una misión para quienes interrumpen el equilibrio",
 		"",
 		"Se dice que existe un cuarzo perdido que permite conectar con la Pachamama directamente, tráelo por el bien de la vida.",
-		"Las formas de vida más delicadas no pueden ser transportadas en gravedad 0 por mucho tiempo, lleva este Snurfit sano y salvo a su planeta estando lo menos posible viajando"
+		"Las formas de vida más delicadas no pueden ser transportadas en gravedad 0 por mucho tiempo, lleva este Snurfit sano y salvo a su planeta estando lo menos posible viajando",
+		"Hay crímenes en contra de la vida cometiéndose en cierto planeta, hay que hacer algo."
 		], [
 	    "Una entrega puntual puede evitar muchos conflictos. Viaja y regresa sin incidentes.",
 	    "Un desequilibrio temporal puede facilitar futuras negociaciones. Ocúpate del suministro.",
@@ -270,7 +301,8 @@ cursor = cr_default
 		"Lo único que el mal necesita para triunfar es que el bien no haga nada. Ve y haz algo por la paz.",
 		"",
 		"Tengo entendido que todo el mudno anda buscando algo por allá afuera, sea lo que sea, nosotros también lo queremos.",
-		"La Estatua de Hielo de la Amistad debe ser llevada pronto al gran banquete, aquí la tenemos en un congelador a salvo, te lo pasaríamos, pero no le hace el enchufe a tu nave"
+		"La Estatua de Hielo de la Amistad debe ser llevada pronto al gran banquete, aquí la tenemos en un congelador a salvo, te lo pasaríamos, pero no le hace el enchufe a tu nave",
+		""
 		], [
 		"La logística es la columna vertebral del Imperio. Asegúrate de cumplir con ese peso.",
 		"Los recursos son para quienes sean fuertes y puedan defenderlos. Nuestros vecinos parecen débiles.",
@@ -285,7 +317,8 @@ cursor = cr_default
 		"Los enemigos del Imperio están por todos lados. Gánate su confianza y deja que sea el principio de su fin.",
 		"Necesitamos suministrar armas a la guerrilla por medio de una oficina comercial, asegúrate de que no pasen por el mercado.",
 		"Quiero un nuevo trofeo que colgar de mi pared, he escuchado que te los puedes encontrar botados por los bordes del sistema.",
-		"Queremos llevar este pastel que suena como reloj a un amigo nuestro, aquí está seguro, pero te recomiendo mucho que no lo tengas demasiado tiempo dentro de tu nave."
+		"Queremos llevar este pastel que suena como reloj a un amigo nuestro, aquí está seguro, pero te recomiendo mucho que no lo tengas demasiado tiempo dentro de tu nave.",
+		"¿Quieres ayudar al equilibrio? A veces se necesita ensuciar las manos para poner la maquinaría en marcha."
 	]]
 	for(var a = 0; a < mision_max; a++)
 		for(var b = 0; b < arquetipo_max; b++)
@@ -336,6 +369,8 @@ cursor = cr_default
 	draw_background_y = -1
 	draw_background_text = ""
 	draw_background_halign = fa_center
+	gui_draw_path = false
+	gui_draw_relacion = true
 #endregion
 #region Tutorial
 	ini_open("tutorial.ini")
@@ -538,8 +573,12 @@ counter_nave = 0
 counter_empresa = 0
 counter_imperio = 0
 #region Batalla
+	nave_nombre = ["SP-crusaider", "KZ-1", "TK-32"]
+	nave_hp = [100, 70, 400]
+	nave_vel = [0.3, 0.5, 0.2]
 	batalla = false
 	batalla_planeta = null_planeta
+	batalla_pirata = null_empresa
 	null_batalla_nave = {
 		nave : null_nave,
 		x : 0,
@@ -548,7 +587,8 @@ counter_imperio = 0
 		vel : 0,
 		hp : 0,
 		step : 0,
-		diff : 0
+		diff : 0,
+		ia : true
 	}
 	batalla_naves = array_create(0, null_batalla_nave)
 	null_batalla_bala = {
@@ -557,6 +597,7 @@ counter_imperio = 0
 		hmove : 0,
 		vmove : 0,
 		vel : 0,
+		step : 0,
 		home : null_batalla_nave,
 		pointer : array_create(0, 0)
 	}
@@ -572,8 +613,28 @@ counter_imperio = 0
 		pointer : array_create(0, 0)
 	}
 	batalla_asteroides = array_create(0, null_batalla_asteroide)
+	null_batalla_efecto = {
+		x : 0,
+		y : 0,
+		efecto : spr_icon,
+		subsprite : 0,
+		vel : 0,
+		step : 0,
+		pointer : array_create(1, 0)
+	}
+	batalla_efectos = array_create(0, null_batalla_efecto)
 	batalla_step = 0
 	batalla_loser = null_batalla_nave
+	batalla_camx = 0
+	batalla_camy = 0
+	batalla_background = undefined
+	#macro batalla_dis_freno 10_000 //100^2
+	#macro batalla_hitbox 255 // 15^2
+	#macro batalla_sidex 320
+	#macro batalla_sidey 240
+	#macro batalla_asteroide_disx 400
+	#macro batalla_asteroide_disy 300
+	#macro batalla_dis_bala 250_000 // 500^2
 #endregion
 imperios_eliminados = array_create(0, null_imperio)
 //Imperios

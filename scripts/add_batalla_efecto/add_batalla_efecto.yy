@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"add_batalla_bala",
+  "%Name":"add_batalla_efecto",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"add_batalla_bala",
+  "name":"add_batalla_efecto",
   "parent":{
     "name":"Batalla",
     "path":"folders/Batalla.yy",

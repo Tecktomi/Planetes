@@ -45,9 +45,9 @@ function menu_mercado(planeta = control.null_planeta){
 								array_remove(mision.data.destinos, planeta)
 								var len = array_length(mision.data.destinos)
 								if len = 2
-									mision.nombre = $"Tráenos {recurso_nombre[rec_electronicos]} de {planeta_nombre(mision.data.destinos[0])} y {planeta_nombre(mision.data.destinos[1])}"
+									mision.nombre = string(mision_texto[mision.index, 1], planeta_nombre(mision.data.destinos[0]), planeta_nombre(mision.data.destinos[1]))
 								else if len = 1
-									mision.nombre = $"Tráenos {recurso_nombre[rec_electronicos]} de {planeta_nombre(mision.data.destinos[0])}"
+									mision.nombre = string(mision_texto[mision.index, 2], planeta_nombre(mision.data.destinos[0]))
 								else if len = 0
 									mision_cumplir(mision)
 							}
@@ -80,9 +80,9 @@ function menu_mercado(planeta = control.null_planeta){
 								array_remove(mision.data.destinos, planeta)
 								var len = array_length(mision.data.destinos)
 								if len = 2
-									mision.nombre = $"Lleva al menos 4 de {recurso_nombre[rec_comida]} a {planeta_nombre(mision.data.destinos[0])} y {planeta_nombre(mision.data.destinos[1])}"
+									mision.nombre = string(mision_texto[mision.index, 1], planeta_nombre(mision.data.destinos[0]), planeta_nombre(mision.data.destinos[1]))
 								else if len = 1
-									mision.nombre = $"Lleva al menos 4 de {recurso_nombre[rec_comida]} a {planeta_nombre(mision.data.destinos[0])}"
+									mision.nombre = string(mision_texto[mision.index, 2], planeta_nombre(mision.data.destinos[0]))
 								else if len = 0
 									mision_cumplir(mision)
 							}

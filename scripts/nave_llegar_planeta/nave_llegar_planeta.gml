@@ -13,7 +13,7 @@ function nave_llegar_planeta(nave = control.null_nave){
 						if mision.data.process++ = 0{
 							do mision.data.destino = array_choose(planetas_no_gigantes)
 							until not (in(mision.data.destino, mision.contratista, planeta) or array_contains(mision.restricciones, mision.data.destino))
-							mision.nombre = $"Ahora viaja a {planeta_nombre(mision.data.destino)}"
+							mision.nombre = string(mision_texto[mision.index, 1], planeta_nombre(mision.data.destino))
 							temp_viaje = calcular_viaje_light(planeta, mision.data.destino)
 							mision.fecha += 3 * temp_viaje.dis
 							mision.paga += 3 * mision.data.destino.luna_externa
@@ -28,20 +28,16 @@ function nave_llegar_planeta(nave = control.null_nave){
 						array_remove(mision.data.destinos, planeta)
 						var len = array_length(mision.data.destinos)
 						if len = 2
-							mision.nombre = $"Visita {planeta_nombre(mision.data.destinos[0])} y {planeta_nombre(mision.data.destinos[1])}"
+							mision.nombre = string(mision_texto[mision.index, 1], planeta_nombre(mision.data.destinos[0]), planeta_nombre(mision.data.destinos[1]))
 						else if len = 1
-							mision.nombre = $"Visita {planeta_nombre(mision.data.destinos[0])}"
+							mision.nombre = string(mision_texto[mision.index, 2], planeta_nombre(mision.data.destinos[0]))
 						else
 							mision_cumplir(mision)
 					}
 				}
 				//Espiar
-				else if mision.index = mis_espiar_empresas{
-					if mision.data.destino = planeta
-						mision.nombre = $"Quédate en {planeta_nombre(mision.data.destino)} y espera a que {mision.data.cantidad} naves pasen por ahí"
-					else
-						mision.nombre = $"Viaja a {planeta_nombre(mision.data.destino)} y espera a que {mision.data.cantidad} naves pasen por ahí"
-				}
+				else if mision.index = mis_espiar_empresas
+					mision.nombre = string(mision_texto[mision.index, (mision.data.destino = planeta) ? 1 : 0], planeta_nombre(mision.data.destino), mision.data.cantidad)
 				//Artefacto
 				else if mision.index = mis_artefacto{
 					if mision.data.destino = planeta{
@@ -60,6 +56,9 @@ function nave_llegar_planeta(nave = control.null_nave){
 					else if planeta = mision.data.destino
 						mision_cumplir(mision)
 				}
+				//Piratería
+				else if mision.index = mis_pirateria
+					mision.nombre = string(mision_texto[mision.index, (mision.data.destino = planeta) ? 1 : 0], planeta_nombre(mision.data.destino))
 				//Restricciones
 				if in(mision.restricciones, planeta)
 					mision_fallar(mision, $"Has pasado por {planeta_nombre(planeta)}")
@@ -92,12 +91,8 @@ function nave_llegar_planeta(nave = control.null_nave){
 		//Empresas al llegar a un planeta
 		else{
 			//Entrar en batalla
-			if batalla and nave_select_bool and not nave_select.viaje_bool and nave.destino = nave_select.origen{
-				batalla_planeta = nave.destino
-				batalla_naves = [
-					add_batalla_nave(nave_select,,,,, nave_select.hp),
-					add_batalla_nave(nave, 600, 400, 120, 0.5, nave.hp)]
-			}
+			if batalla and nave_select_bool and not nave_select.viaje_bool and nave.destino = nave_select.origen
+				batalla_start(nave.destino, nave, jugador)
 			var mision = (array_length(nave.misiones) = 0 ? null_mision : nave.misiones[0]), mision_index = mision.index
 			var flag_saturar_2 = (mision_index = mis_saturar_mercado and mision.data.destino = planeta)
 			var flag_comida_2 = (mision_index = mis_comida and array_contains(mision.data.destinos, planeta))
@@ -173,7 +168,7 @@ function nave_llegar_planeta(nave = control.null_nave){
 			if array_length(nave.misiones) = 0 and array_length(planeta.misiones) > 0 and temp_reputacion >= -0.5{
 				input_data = irandom(array_length(planeta.misiones) - 1)
 				var b = planeta.misiones[input_data]
-				if not in(b, mis_armas, mis_salvar_fauna, mis_fallar, mis_viaje_express) and temp_reputacion >= mision_reputacion[b] and dia - empresa.ultima_falla[b] > 1500
+				if tag_mision_ia[b] and temp_reputacion >= mision_reputacion[b] and dia - empresa.ultima_falla[b] > 1500
 					mision_aceptar(b, planeta, empresa, nave)
 			}
 			nave_npc_viajar(nave, planeta)
@@ -187,7 +182,7 @@ function nave_llegar_planeta(nave = control.null_nave){
 					if mision.index = mis_espiar_empresas and mision.data.destino = planeta{
 						if not array_contains(mision.data.empresas, nave.empresa)
 							array_push(mision.data.empresas, nave.empresa)
-						mision.nombre = $"Quédate en {planeta_nombre(mision.data.destino)} y espera a que {--mision.data.cantidad} naves pasen por ahí"
+						mision.nombre = string(mision_texto[mision.index, 1], planeta_nombre(mision.data.destino), --mision.data.cantidad)
 						if mision.data.cantidad <= 0{
 							mision_cumplir(mision)
 							if empresa = jugador

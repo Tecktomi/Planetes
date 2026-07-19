@@ -1,6 +1,6 @@
 function draw_planeta(planeta = control.null_planeta, xx = 0, yy = 0, _display_relacion = true, _display_nombre = true, _display_oficina = true, _display_sombra = false){
 	with control{
-		if _display_relacion{
+		if _display_relacion and not planeta.gigante and gui_draw_relacion{
 			if jugador.relacion_imperio[? planeta.imperio.index] != 0{
 				draw_set_color(make_color_hsv(clamp(40 + 20 * jugador.relacion_imperio[? planeta.imperio.index], 0, 80), 255, 255))
 				draw_set_alpha(0.05)

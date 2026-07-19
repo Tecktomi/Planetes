@@ -17,7 +17,7 @@ function menu_noticias(){
 		gui_scroll(120, ypos, room_width - 240, room_height - 80 - ypos, array_length(noticias), 18, function(a, ypos){
 			if draw_text_boton(130, ypos, noticias[a].titulo, 1)
 				show_noticia = a
-			if draw_sprite_boton(spr_icon, 0, room_width - 200, ypos, 1)
+			if draw_sprite_boton(spr_icon, 0, room_width - 200, ypos,,, 1)
 				array_delete(noticias, a, 1)
 			ypos += text_y
 			if show_noticia = a{

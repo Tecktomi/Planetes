@@ -19,7 +19,7 @@ function mision_aceptar(index, planeta = control.null_planeta, empresa = control
 			var temp_viaje = calcular_viaje_light(planeta, destino)
 			mision.fecha = dia + 3 * temp_viaje.dis
 			mision.paga += 3 * destino.luna_externa
-			mision.nombre = $"Viajar a {planeta_nombre(destino)}"
+			mision.nombre = string(mision_texto[index, 0], planeta_nombre(destino))
 		}
 		//Compra
 		else if index = mis_desabastecer{
@@ -44,7 +44,7 @@ function mision_aceptar(index, planeta = control.null_planeta, empresa = control
 			var temp_viaje = calcular_viaje_light(planeta, destino)
 			mision.fecha = dia + 8 * temp_viaje.dis + 400
 			mision.paga += 3 * destino.luna_externa
-			mision.nombre = $"Compra todo el {recurso_nombre[recurso]} de {planeta_nombre(destino)}"
+			mision.nombre = string(mision_texto[index, 0], recurso_nombre[recurso], planeta_nombre(destino))
 		}
 		//Informacion
 		else if index = mis_recoger_informacion{
@@ -72,7 +72,7 @@ function mision_aceptar(index, planeta = control.null_planeta, empresa = control
 				tiempo += calcular_viaje_light(planeta, destinos[a]).dis
 			mision.fecha = 4 * tiempo
 			mision.paga += 3 * (destinos[0].luna_externa + destinos[1].luna_externa + destinos[2].luna_externa)
-			mision.nombre = $"Visita {planeta_nombre(destinos[0])}, {planeta_nombre(destinos[1])} y {planeta_nombre(destinos[2])}"
+			mision.nombre = string(mision_texto[index, 0], planeta_nombre(destinos[0]), planeta_nombre(destinos[1]), planeta_nombre(destinos[2]))
 		}
 		//Saturar mercado
 		else if index = mis_saturar_mercado{
@@ -104,7 +104,7 @@ function mision_aceptar(index, planeta = control.null_planeta, empresa = control
 			var temp_viaje = calcular_viaje_light(planeta, destino)
 			mision.fecha = dia + 10 * temp_viaje.dis + 500
 			mision.paga += 3 * destino.luna_externa
-			mision.nombre = $"Baja el precio de venta de {recurso_nombre[recurso]} en {planeta_nombre(destino)} a ${precio}"
+			mision.nombre = string(mision_texto[index, 0], recurso_nombre[recurso], planeta_nombre(destino), precio)
 			nave.recurso[recurso] += 5
 		}
 		//Acumular
@@ -119,7 +119,7 @@ function mision_aceptar(index, planeta = control.null_planeta, empresa = control
 				cantidad : cantidad
 			}
 			mision.fecha = dia + irandom_range(1600, 1800)
-			mision.nombre = $"Acumula {cantidad} de {recurso_nombre[recurso]} en tu nave"
+			mision.nombre = string(mision_texto[index, 0], cantidad, recurso_nombre[recurso])
 		}
 		//Espiar
 		else if index = mis_espiar_empresas{
@@ -140,7 +140,7 @@ function mision_aceptar(index, planeta = control.null_planeta, empresa = control
 			}
 			var temp_viaje = calcular_viaje_light(planeta, destino)
 			mision.fecha = dia + 6 * temp_viaje.dis + 500
-			mision.nombre = $"Viaja a {planeta_nombre(destino)} y espera a que {cantidad} naves pasen por ahí"
+			mision.nombre = string(mision_texto[index, 0], planeta_nombre(destino), cantidad)
 			mision.paga += cantidad + 3 * destino.luna_externa
 		}
 		//Investigar
@@ -161,7 +161,7 @@ function mision_aceptar(index, planeta = control.null_planeta, empresa = control
 			var temp_viaje = calcular_viaje_light(planeta, destino)
 			mision.fecha = dia + 8 * temp_viaje.dis + 500
 			mision.paga += 3 * destino.luna_externa
-			mision.nombre = $"Viaja a {destino.nombre}, una vez ahí, quédate {mision.data.cantidad} días sin que nadie te vea"
+			mision.nombre = string(mision_texto[index, 0], planeta_nombre(destino), mision.data.cantidad)
 		}
 		//Obtener electrónicos
 		else if index = mis_electronicos{
@@ -189,7 +189,7 @@ function mision_aceptar(index, planeta = control.null_planeta, empresa = control
 				tiempo += calcular_viaje_light(planeta, destinos[a]).dis
 			mision.fecha = 4 * tiempo
 			mision.paga += 3 * (destinos[0].luna_externa + destinos[1].luna_externa + destinos[2].luna_externa)
-			mision.nombre = $"Tráenos electrónicos de {planeta_nombre(destinos[0])}, {planeta_nombre(destinos[1])} y {planeta_nombre(destinos[2])}"
+			mision.nombre = string(mision_texto[index, 0], planeta_nombre(destinos[0]), planeta_nombre(destinos[1]), planeta_nombre(destinos[2]))
 		}
 		//Salvar fauna
 		else if index = mis_salvar_fauna{
@@ -201,7 +201,7 @@ function mision_aceptar(index, planeta = control.null_planeta, empresa = control
 				cantidad : irandom_range(800, 1000)
 			}
 			mision.fecha = dia + irandom_range(1600, 1800)
-			mision.nombre = $"Lleva 5 animales a una oficina comercial y déjalos ahí {mision.data.cantidad} días"
+			mision.nombre = string(mision_texto[index, 0], mision.data.cantidad)
 			mision.paga += min(5, nave.recurso[rec_fauna]) * precio_recurso(rec_fauna, planeta)
 			if not flag{
 				empresa.dinero += 15
@@ -235,7 +235,7 @@ function mision_aceptar(index, planeta = control.null_planeta, empresa = control
 				tiempo += calcular_viaje_light(planeta, destinos[a]).dis
 			mision.fecha = 4 * tiempo
 			mision.paga += 3 * (destinos[0].luna_externa + destinos[1].luna_externa + destinos[2].luna_externa)
-			mision.nombre = $"Lleva al menos 4 de {recurso_nombre[rec_comida]} a {planeta_nombre(destinos[0])}, {planeta_nombre(destinos[1])} y {planeta_nombre(destinos[2])}"
+			mision.nombre = string(mision_texto[index, 0], planeta_nombre(destinos[0]), planeta_nombre(destinos[1]), planeta_nombre(destinos[2]))
 		}
 		//Fallar misión
 		if index = mis_fallar{
@@ -253,7 +253,7 @@ function mision_aceptar(index, planeta = control.null_planeta, empresa = control
 			}
 			var temp_viaje = calcular_viaje_light(planeta, destino)
 			mision.fecha = dia + 10 * temp_viaje.dis + 1000
-			mision.nombre = $"Falla en una misión del planeta {planeta_nombre(destino)}"
+			mision.nombre = string(mision_texto[index, 0], planeta_nombre(destino))
 			mision.paga += 3 * destino.luna_externa
 		}
 		//Armas encubiertas
@@ -273,7 +273,7 @@ function mision_aceptar(index, planeta = control.null_planeta, empresa = control
 			}
 			var temp_viaje = calcular_viaje_light(planeta, destino)
 			mision.fecha = dia + 6 * temp_viaje.dis + 500
-			mision.nombre = $"Lleva 5 {recurso_nombre[rec_armas]} a una oficina comercial en {planeta_nombre(destino)} y déjalas ahí, sin pasar por el mercado"
+			mision.nombre = string(mision_texto[index, 0], 5, planeta_nombre(destino))
 			mision.paga += min(5, nave.recurso[rec_armas]) * precio_recurso(rec_armas, planeta) + 3 * destino.luna_externa
 			if not empresa.oficina_bool[destino.index]{
 				empresa.dinero += 15
@@ -288,7 +288,7 @@ function mision_aceptar(index, planeta = control.null_planeta, empresa = control
 			if planeta.luna_externa
 				array_remove(temp_array_planetas, planeta.luna)
 			var destino = array_choose(temp_array_planetas)
-			mision.nombre = $"Busca el artefacto perdido entre las lunas de {destino.nombre}"
+			mision.nombre = string(mision_texto[index, 0], planeta_nombre(destino))
 			var temp_viaje = calcular_viaje_light(planeta, destino)
 			mision.fecha = dia + 6 * temp_viaje.dis + 500
 			destino = array_choose(destino.lunas)
@@ -324,9 +324,28 @@ function mision_aceptar(index, planeta = control.null_planeta, empresa = control
 				destino : destino,
 				cantidad : cantidad
 			}
-			mision.nombre = $"Viaja a {planeta_nombre(destino)} cuando el viaje a este dure menos de {cantidad} días"
+			mision.nombre = string(mision_texto[index, 0], planeta_nombre(destino), cantidad)
 			mision.fecha = dia + 300 + 8 * cantidad
 			mision.paga += 3 * destino.luna_externa
+		}
+		//Piratería
+		else if index = mis_pirateria{
+			var temp_array_planetas = array_create(0, null_planeta), a = weighted_choose(arquetipo_relacion_negativa[planeta.arquetipo])
+			for(var c = 0; c < array_length(planetas_arquetipo[a]); c++)
+				if planetas_arquetipo[a, c].imperio != planeta.imperio
+					array_push(temp_array_planetas, planetas_arquetipo[a, c])
+			if array_length(temp_array_planetas) = 0{
+				array_disorder_remove(empresa.misiones, mision, 0)
+				return undefined
+			}
+			var destino = array_choose(temp_array_planetas)
+			mision.data = {
+				destino : destino
+			}
+			var temp_viaje = calcular_viaje_light(planeta, destino)
+			mision.fecha = dia + 8 * temp_viaje.dis + 500
+			mision.paga += 3 * destino.luna_externa
+			mision.nombre = string(mision_texto[index, 0], planeta_nombre(destino))
 		}
 		//Restricciones
 		var cantidad = irandom(clamp(ceil(empresa.relacion_imperio[? planeta.imperio.index]), 0, 5))

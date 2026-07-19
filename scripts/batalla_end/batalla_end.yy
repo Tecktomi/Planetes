@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"add_batalla_bala",
+  "%Name":"batalla_end",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"add_batalla_bala",
+  "name":"batalla_end",
   "parent":{
     "name":"Batalla",
     "path":"folders/Batalla.yy",

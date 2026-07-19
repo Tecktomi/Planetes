@@ -70,7 +70,7 @@ function menu_oficina(planeta = control.null_planeta){
 						var mision = jugador.misiones[b]
 						if not mision.status{
 							if mision.index = mis_armas and mision.data.destino = planeta{
-								mision.nombre = $"Lleva {max(0, --mision.data.cantidad)} {recurso_nombre[rec_armas]} a una oficina comercial en {planeta_nombre(mision.data.destino)} y déjalas ahí, sin pasar por el mercado"
+								mision.nombre = string(mision_texto[mision.index, 1], max(0, --mision.data.cantidad), planeta_nombre(mision.data.destino))
 								if mision.data.cantidad <= 0 and oficina.recurso[rec_armas] >= 5{
 									oficina.recurso[rec_armas] -= 5
 									mision_cumplir(mision)

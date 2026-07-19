@@ -1,3 +1,8 @@
+//Batallas
+if batalla_planeta != null_planeta{
+	scr_batalla()
+	exit
+}
 draw_init()
 if is_undefined(background){
 	var surf = surface_create(room_width, room_height)
@@ -22,12 +27,6 @@ if is_undefined(background){
 }
 var max_viaje = infinity, var_zoom = ZOOM_MAX - zoom
 draw_sprite_stretched(background, 0, -room_width * var_zoom / 60, -room_height * var_zoom / 60, room_width * (1 + var_zoom / 30), room_height * (1 + var_zoom / 30))
-//Batallas
-if batalla_planeta != null_planeta{
-	scr_batalla()
-	draw_end()
-	exit
-}
 min_dis = DIS_PLANET_CLIC
 planeta_mouse = null_planeta
 planeta_mouse_bool = false
@@ -39,7 +38,7 @@ if subsistema_vista{
 	//Planetas exteriores
 	for(var a = array_length(planetas_terrestres_gigantes) - 1; a >= 0; a--){
 		var planeta = planetas_terrestres_gigantes[a]
-		draw_planeta(planeta, RW2 + (planeta.x - RW2) / zoom, RH2 + (planeta.y - RH2) / zoom, false)
+		draw_planeta(planeta, RW2 + (planeta.x - RW2) / zoom, RH2 + (planeta.y - RH2) / zoom)
 	}
 	if mouse_wheel_up() and show = -1{
 		subsistema_vista = false
@@ -79,7 +78,7 @@ else{
 		//Planetas interiores
 		for(var a = array_length(planetas_internos) - 1; a >= 0; a--){
 			var planeta = planetas_internos[a]
-			draw_planeta(planeta, RW2 + (planeta.x - RW2) / zoom, RH2 + (planeta.y - RH2) / zoom,,,, true)
+			draw_planeta(planeta, RW2 + (planeta.x - RW2) / zoom, RH2 + (planeta.y - RH2) / zoom, gui_draw_relacion,,, true)
 		}
 		if abs(camx - RW2) > 0.01{
 			camx = (19 * camx + RW2) / 20
@@ -97,7 +96,7 @@ else{
 		draw_text(RW2, 40, $"Sistema planetario de {subsistema.nombre}")
 		for(var a = array_length(subsistema.lunas) - 1; a >= 0; a--){
 			var planeta = subsistema.lunas[a]
-			draw_planeta(planeta, RW2 + (planeta.x - camx) / zoom, RH2 + (planeta.y - camy) / zoom)
+			draw_planeta(planeta, RW2 + (planeta.x - camx) / zoom, RH2 + (planeta.y - camy) / zoom, gui_draw_relacion)
 		}
 		if abs(camx - subsistema.x) > 0.01{
 			camx = (19 * camx + subsistema.x) / 20
@@ -109,7 +108,7 @@ else{
 		}
 	}
 	//Path
-	if not nave_select.viaje_bool{
+	if not nave_select.viaje_bool and gui_draw_path{
 		draw_set_alpha(0.5)
 		for(var a = 0; a < 5; a++){
 			var b = (a + last_path_index) mod 5, planeta_a = last_path[b], planeta_b = last_path[(b + 1) mod 5]
@@ -135,6 +134,12 @@ else{
 	else
 		zoom = 1
 }
+if draw_sprite_boton(spr_icon, gui_draw_path ? 3 : 4, 4, room_height - 36, 2, 2)
+	gui_draw_path = not gui_draw_path
+if draw_sprite_boton(spr_icon, gui_draw_relacion ? 5 : 6, 40, room_height - 36, 2, 2)
+	gui_draw_relacion = not gui_draw_relacion
+if draw_sprite_boton(spr_icon, batalla ? 7 : 8, 76, room_height - 36, 2, 2)
+	batalla = not batalla
 //Dibujar misiones activas
 if array_length(jugador.misiones) > 0{
 	var temp_text = ""

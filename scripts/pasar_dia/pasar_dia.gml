@@ -29,7 +29,7 @@ function pasar_dia(){
 					if not mision.status and tag_mision_espiar[mision.index] and nave.origen = mision.data.destino{
 						mision.fecha++
 						if mision.index = mis_espiar_planeta{
-							mision.nombre = $"Quédate en {planeta_nombre(mision.data.destino)} {--mision.data.cantidad} días sin que nadie te vea"
+							mision.nombre = string(mision_texto[mision.index, 1], planeta_nombre(mision.data.destino), --mision.data.cantidad)
 							if mision.data.cantidad <= 0{
 								mision_cumplir(mision)
 								if empresa = jugador
@@ -52,7 +52,7 @@ function pasar_dia(){
 					for(var c = array_length(planetas_no_gigantes) - 1; c >= 0; c--)
 						if empresa.oficina_bool[c] and empresa.oficina[c].recurso[rec_fauna] >= 5{
 							mision.fecha++
-							mision.nombre = $"Lleva 5 animales a una oficina comercial y déjalos ahí {--mision.data.cantidad} días"
+							mision.nombre = string(mision_texto[mision.index, 1], --mision.data.cantidad)
 							if mision.data.cantidad <= 0
 								mision_cumplir(mision)
 							break
@@ -143,6 +143,7 @@ function pasar_dia(){
 							}
 					}
 				}
+				//Misiones
 				if irandom(1){
 					if irandom(array_length(planeta.misiones)) = 0
 						array_push(planeta.misiones, weighted_choose(arquetipo_mision_frecuencia[planeta.arquetipo]))

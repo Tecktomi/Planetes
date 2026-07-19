@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"add_batalla_nave",
   "parent":{
-    "name":"ADD",
-    "path":"folders/ADD.yy",
+    "name":"Batalla",
+    "path":"folders/Batalla.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",
