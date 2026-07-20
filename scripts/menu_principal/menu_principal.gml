@@ -52,6 +52,12 @@ function menu_principal(planeta = control.null_planeta){
 				input_layer = 2
 			}
 		}
+		//Reparar
+		ypos += text_y + 10
+		if nave_select.hp < nave_hp[nave_select.modelo] and jugador.relacion_imperio[? planeta.imperio.index] > 0 and draw_text_boton(room_width / 2, ypos, $"Reparar ${ceil(nave_hp[nave_select.modelo] - nave_select.hp)}", 1) and (jugador.dinero >= ceil(nave_hp[nave_select.modelo] - nave_select.hp)){
+			nave_select.hp = nave_hp[nave_select.modelo]
+			jugador.dinero -= ceil(nave_hp[nave_select.modelo] - nave_select.hp)
+		}
 		//Confirmar construir oficina
 		if show = 7{
 			draw_set_color(c_ltgray)

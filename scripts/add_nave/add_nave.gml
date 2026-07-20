@@ -1,4 +1,4 @@
-function add_nave(empresa = control.null_empresa){
+function add_nave(empresa = control.null_empresa, modelo = 0){
 	with control{
 		var nave = {
 			index : counter_nave++,
@@ -12,8 +12,8 @@ function add_nave(empresa = control.null_empresa){
 			viaje_pos : 0,
 			recurso : array_create(recurso_max, 0),
 			misiones : array_create(0, null_mision),
-			modelo : 0,
-			hp : 100
+			modelo : modelo,
+			hp : nave_hp[modelo]
 		}
 		array_disorder_push(naves, nave, 0)
 		array_disorder_push(empresa.naves, nave, 1)

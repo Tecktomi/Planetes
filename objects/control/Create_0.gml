@@ -623,13 +623,20 @@ counter_imperio = 0
 		pointer : array_create(1, 0)
 	}
 	batalla_efectos = array_create(0, null_batalla_efecto)
+	batalla_humo = array_create(0, {
+		x : 0,
+		y : 0,
+		hmove : 0,
+		vmove : 0,
+		step : 0
+	})
 	batalla_step = 0
 	batalla_loser = null_batalla_nave
 	batalla_camx = 0
 	batalla_camy = 0
 	batalla_background = undefined
 	#macro batalla_dis_freno 10_000 //100^2
-	#macro batalla_hitbox 255 // 15^2
+	#macro batalla_hitbox 625 // 25^2
 	#macro batalla_sidex 320
 	#macro batalla_sidey 240
 	#macro batalla_asteroide_disx 400
@@ -793,7 +800,7 @@ last_path_index = 0
 repeat(5){
 	var empresa = add_empresa()
 	repeat(3){
-		var nave = add_nave(empresa)
+		var nave = add_nave(empresa, irandom(array_length(nave_nombre) - 1))
 		nave.destino = planetas_no_gigantes[irandom(array_length(planetas_no_gigantes) - 1)]
 		nave.viaje_bool = true
 	}

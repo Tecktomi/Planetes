@@ -4,6 +4,6 @@ function batalla_start(planeta = control.null_planeta, nave = control.null_nave,
 		batalla_pirata = pirata
 		batalla_naves = [
 			add_batalla_nave(nave_select,,,,, nave_select.hp, false),
-			add_batalla_nave(nave, 600, 400, 120, 0.5, nave.hp / 2, true)]
+			add_batalla_nave(nave, 600, 400, 30, 4, nave.hp / 2, true)]
 	}
 }

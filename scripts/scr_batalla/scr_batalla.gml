@@ -65,8 +65,19 @@ function scr_batalla(){
 					var _angle = degtorad(point_direction(xx, yy, _jugx, _jugy)), cosa = cos(_angle), sina = sin(_angle)
 					draw_line(_jugx - 10 * cosa, _jugy + 10 * sina, _jugx - 30 * cosa, _jugy + 30 * sina)
 				}
-				else
-					draw_sprite_ext(spr_nave, 0, xx, yy, 2, 2, dir, c_white, 1)
+				else{
+					draw_sprite_ext(spr_nave, nave.modelo, xx, yy, 2, 2, dir, c_white, 1)
+					if hp <= 30 and control.image_index % 2{
+						var b = random_range(-1, 1)
+						array_push(control.batalla_humo, {
+							x : x,
+							y : y,
+							hmove : b,
+							vmove : sqrt(1 - sqr(b)) * (2 * irandom(1) - 1),
+							step : 60
+						})
+					}
+				}
 				if abs(vel) > 0.01
 					vel *= 0.95
 				else
@@ -103,7 +114,23 @@ function scr_batalla(){
 				else if yy > room_height + batalla_asteroide_disy
 					y -= room_height + 2 * batalla_asteroide_disy
 			}
+		draw_set_color(c_white)
+		for(var a = array_length(batalla_humo) - 1; a >= 0; a--)
+			with batalla_humo[a]{
+				x += hmove
+				y += vmove
+				hmove *= 0.9
+				vmove *= 0.9
+				if --step = 0
+					array_remove(control.batalla_humo, self)
+				else{
+					draw_set_color(make_color_hsv(0, 0, 255 - 4 * step))
+					draw_set_alpha(step / 180)
+				}
+				draw_circle(x - control.batalla_camx, y - control.batalla_camy, 16 - step / 8, false)
+			}
 		draw_set_color(c_yellow)
+		draw_set_alpha(1)
 		for(var a = array_length(batalla_balas) - 1; a >= 0; a--)
 			with batalla_balas[a]{
 				var flag = false
@@ -160,14 +187,14 @@ function scr_batalla(){
 							step = 25
 						}
 						if _dis > batalla_dis_freno
-							vel += 0.3 / max(1, sqrt(abs(diff / 20)))
+							vel += 0.8 * control.nave_vel[nave.modelo] / max(1, sqrt(abs(diff / 20)))
 					}
 					else{
 						if mouse_check_button(mb_any){
 							draw_line(x - control.batalla_camx, y - control.batalla_camy, mouse_x, mouse_y)
 							diff = angle_difference(point_direction(x - control.batalla_camx, y - control.batalla_camy, mouse_x, mouse_y), dir)
 							if mouse_check_button(mb_left)
-								vel += 0.4 / max(1, sqrt(abs(diff / 20)))
+								vel += control.nave_vel[nave.modelo] / max(1, sqrt(abs(diff / 20)))
 						}
 						if keyboard_check_pressed(vk_space)
 							add_batalla_bala(x, y, cos(degtorad(dir)), -sin(degtorad(dir)), 20, self)
