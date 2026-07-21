@@ -184,6 +184,10 @@ function scr_batalla(){
 						diff = angle_difference(point_direction(x, y, target.x, target.y), dir)
 						if --step <= 0 and abs(diff) < 1 and _dis < batalla_dis_bala{
 							add_batalla_bala(x, y, cos(degtorad(dir)), -sin(degtorad(dir)), 20, self)
+							if nave.armas > 1
+								add_batalla_bala(x + 3 * sin(degtorad(dir)), y + 3 * cos(degtorad(dir)), cos(degtorad(dir)), -sin(degtorad(dir)), 20, self)
+							if nave.armas > 2
+								add_batalla_bala(x - 3 * sin(degtorad(dir)), y + 3 * cos(degtorad(dir)), cos(degtorad(dir)), -sin(degtorad(dir)), 20, self)
 							step = 25
 						}
 						if _dis > batalla_dis_freno
@@ -196,8 +200,13 @@ function scr_batalla(){
 							if mouse_check_button(mb_left)
 								vel += control.nave_vel[nave.modelo] / max(1, sqrt(abs(diff / 20)))
 						}
-						if keyboard_check_pressed(vk_space)
+						if keyboard_check_pressed(vk_space){
 							add_batalla_bala(x, y, cos(degtorad(dir)), -sin(degtorad(dir)), 20, self)
+							if nave.armas > 1
+								add_batalla_bala(x + 3 * sin(degtorad(dir)), y + 3 * cos(degtorad(dir)), cos(degtorad(dir)), -sin(degtorad(dir)), 20, self)
+							if nave.armas > 2
+								add_batalla_bala(x - 3 * sin(degtorad(dir)), y + 3 * cos(degtorad(dir)), cos(degtorad(dir)), -sin(degtorad(dir)), 20, self)
+						}
 						if keyboard_check(ord("W"))
 							vel += 0.1
 					}

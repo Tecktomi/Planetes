@@ -2,14 +2,14 @@ function menu_fabricas(planeta = control.null_planeta){
 	with control{
 		if not jugador.oficina_bool[planeta.index]{
 			input_layer = 0
-			show = 0
+			show = MENU_PRINCIPAL
 			exit
 		}
 		var oficina = jugador.oficina[planeta.index], deslizador_counter = 0
 		if (mouse_check_button_pressed(mb_left) and (mouse_x < 100 or mouse_y < 60 or mouse_x > room_width - 100 or mouse_y > room_height - 60)) or mouse_check_button_pressed(mb_right){
 			mouse_clear(mb_right)
 			mouse_clear(mb_left)
-			show = 5
+			show = MENU_OFICINA
 		}
 		var ypos = 100
 		draw_set_halign(fa_center)

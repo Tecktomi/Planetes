@@ -80,6 +80,7 @@
     {"id":{"name":"menu_noticias","path":"scripts/menu_noticias/menu_noticias.yy",},},
     {"id":{"name":"menu_oficina","path":"scripts/menu_oficina/menu_oficina.yy",},},
     {"id":{"name":"menu_principal","path":"scripts/menu_principal/menu_principal.yy",},},
+    {"id":{"name":"menu_taller","path":"scripts/menu_taller/menu_taller.yy",},},
     {"id":{"name":"mision_aceptar","path":"scripts/mision_aceptar/mision_aceptar.yy",},},
     {"id":{"name":"mision_cumplir","path":"scripts/mision_cumplir/mision_cumplir.yy",},},
     {"id":{"name":"mision_fallar","path":"scripts/mision_fallar/mision_fallar.yy",},},

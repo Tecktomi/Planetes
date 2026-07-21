@@ -11,9 +11,11 @@ function add_nave(empresa = control.null_empresa, modelo = 0){
 			viaje_bool : false,
 			viaje_pos : 0,
 			recurso : array_create(recurso_max, 0),
+			recurso_total : 0,
 			misiones : array_create(0, null_mision),
 			modelo : modelo,
-			hp : nave_hp[modelo]
+			hp : nave_hp[modelo],
+			armas : 1
 		}
 		array_disorder_push(naves, nave, 0)
 		array_disorder_push(empresa.naves, nave, 1)

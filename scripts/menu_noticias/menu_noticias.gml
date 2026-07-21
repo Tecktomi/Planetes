@@ -3,7 +3,7 @@ function menu_noticias(){
 		if (mouse_check_button_pressed(mb_left) and (mouse_x < 100 or mouse_y < 60 or mouse_x > room_width - 100 or mouse_y > room_height - 60)) or mouse_check_button_pressed(mb_right){
 			mouse_clear(mb_right)
 			mouse_clear(mb_left)
-			show = 0
+			show = MENU_PRINCIPAL
 		}
 		var ypos = 100
 		draw_set_halign(fa_center)

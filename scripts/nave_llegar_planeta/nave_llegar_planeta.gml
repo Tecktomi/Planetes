@@ -90,7 +90,7 @@ function nave_llegar_planeta(nave = control.null_nave){
 					empresa.recurso_compra_precio[b] = precio_compra
 					empresa.recurso_compra_lugar[b] = planeta
 					if not flag_saturar
-						while planeta.recurso[b] >= 1 and empresa.dinero >= precio_compra and (precio_compra < empresa.recurso_venta_precio[b] or flag_bodega or flag_desabastecer or flag_electronicos){
+						while planeta.recurso[b] >= 1 and nave.recurso_total < nave_carga[nave.modelo] - 5 * nave.armas and empresa.dinero >= precio_compra and (precio_compra < empresa.recurso_venta_precio[b] or flag_bodega or flag_desabastecer or flag_electronicos){
 							comprar_recurso(b, 1, planeta, nave)
 							precio_compra = precio_recurso(b, planeta, true)
 							//Misión desabastecer

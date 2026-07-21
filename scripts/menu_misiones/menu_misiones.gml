@@ -3,7 +3,7 @@ function menu_misiones(planeta = control.null_planeta){
 		if (mouse_check_button_pressed(mb_left) and (mouse_x < 100 or mouse_y < 60 or mouse_x > room_width - 100 or mouse_y > room_height - 60)) or mouse_check_button_pressed(mb_right){
 			mouse_clear(mb_right)
 			mouse_clear(mb_left)
-			show = 0
+			show = MENU_PRINCIPAL
 		}
 		var ypos = 100
 		draw_set_halign(fa_center)
@@ -18,14 +18,14 @@ function menu_misiones(planeta = control.null_planeta){
 			if jugador.relacion_imperio[? planeta.imperio.index] >= mision_reputacion[planeta.misiones[a]]{
 				if draw_text_boton(120, ypos, mision_nombre[planeta.misiones[a]], 1){
 					input_layer = 2
-					show = 3
+					show = MENU_MISIONES_CONFIRMAR
 					input_data = a
 				}
 				ypos += text_y
 			}
 		}
 		//Confirmar
-		if show = 3{
+		if show = MENU_MISIONES_CONFIRMAR{
 			draw_set_color(c_ltgray)
 			draw_rectangle(250, 120, room_width - 250, room_height - 120, false)
 			draw_set_color(c_black)
@@ -33,7 +33,7 @@ function menu_misiones(planeta = control.null_planeta){
 			if mouse_check_button_pressed(mb_left) and (mouse_x < 250 or mouse_y < 120 or mouse_x > room_width - 250 or mouse_y > room_height - 120){
 				mouse_clear(mb_left)
 				input_layer = 1
-				show = 2
+				show = MENU_MISIONES
 			}
 			var b = planeta.misiones[input_data]
 			draw_set_halign(fa_center)
@@ -42,28 +42,28 @@ function menu_misiones(planeta = control.null_planeta){
 			draw_set_halign(fa_right)
 			if draw_text_boton(room_width - 270, room_height - 150, "Cancelar", 2){
 				input_layer = 1
-				show = 2
+				show = MENU_MISIONES
 			}
 			draw_set_halign(fa_left)
 			if draw_text_boton(270, room_height - 150, "Aceptar", 2){
 				var mision = mision_aceptar(b, planeta)
 				if is_undefined(mision){
 					input_layer = 3
-					show = 6
+					show = MENU_MISIONES_NO_DISPONIBLE
 				}
 				else{
 					input_layer = 1
-					show = 2
+					show = MENU_MISIONES
 					if tutorial = 9{
 						tutorial++
 						input_layer = 0
-						show = -1
+						show = MENU_NULL
 					}
 				}
 			}
 		}
 		//Mensaje no se puede tomar la misión
-		if show = 6{
+		if show = MENU_MISIONES_NO_DISPONIBLE{
 			draw_set_color(c_ltgray)
 			draw_rectangle(250, 200, room_width - 250, room_height - 200, false)
 			draw_set_color(c_black)
@@ -73,7 +73,7 @@ function menu_misiones(planeta = control.null_planeta){
 			if mouse_check_button_pressed(mb_left) and (mouse_x < 250 or mouse_y < 200 or mouse_x > room_width - 250 or mouse_y > room_height - 200) or draw_text_boton(room_width / 2, room_height - 250, "Okey", 3){
 				mouse_clear(mb_left)
 				input_layer = 1
-				show = 2
+				show = MENU_MISIONES
 			}
 		}
 	}

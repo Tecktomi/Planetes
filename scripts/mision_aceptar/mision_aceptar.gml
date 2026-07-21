@@ -105,6 +105,7 @@ function mision_aceptar(index, planeta = control.null_planeta, empresa = control
 			mision.fecha = dia + 10 * temp_viaje.dis + 500
 			mision.paga += 3 * destino.luna_externa
 			mision.nombre = string(mision_texto[index, 0], recurso_nombre[recurso], planeta_nombre(destino), precio)
+			nave.recurso_total += 5
 			nave.recurso[recurso] += 5
 		}
 		//Acumular
@@ -207,6 +208,7 @@ function mision_aceptar(index, planeta = control.null_planeta, empresa = control
 				empresa.dinero += 15
 				mision.paga -= 15
 			}
+			nave.recurso_total += max(0, 5 - nave.recurso[rec_fauna])
 			nave.recurso[rec_fauna] = max(5, nave.recurso[rec_fauna])
 		}
 		//Entregar comida
@@ -279,7 +281,8 @@ function mision_aceptar(index, planeta = control.null_planeta, empresa = control
 				empresa.dinero += 15
 				mision.paga -= 15
 			}
-			nave.recurso[rec_fauna] = max(5, nave.recurso[rec_armas])
+			nave.recurso_total += max(0, 5 - nave.recurso[rec_armas])
+			nave.recurso[rec_armas] = max(5, nave.recurso[rec_armas])
 		}
 		//Artefacto
 		else if index = mis_artefacto{

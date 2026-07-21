@@ -174,6 +174,7 @@ cursor = cr_default
 		array_push(mision_on_compra, on_compra)
 		array_push(mision_on_venta, on_venta)
 		array_push(mision_on_viaje, on_viaje)
+		array_push(mision_on_especial, on_especial)
 		return array_length(mision_nombre) - 1
 	}
 	mis_viajar = def_mision("Viajar", 5, -1, 1, 0.5,,,
@@ -294,6 +295,15 @@ cursor = cr_default
 		function(mision, planeta, recurso){
 			if not mision.status and recurso = rec_armas
 				mision_fallar(mision, "Has vendido las armas en el mercado local")
+		},,
+		function(mision, planeta){
+			if not mision.status and mision.data.destino = planeta{
+				mision.nombre = string(mision_texto[mision.index, 1], max(0, --mision.data.cantidad), planeta_nombre(mision.data.destino))
+				if mision.data.cantidad <= 0 and oficina.recurso[rec_armas] >= 5{
+					oficina.recurso[rec_armas] -= 5
+					mision_cumplir(mision)
+				}
+			}
 		})
 	mis_artefacto = def_mision("Encontrar artefacto", 15, 0, 1, 1,,,
 		function(mision, planeta){
@@ -594,9 +604,11 @@ null_nave = {
 	viaje_bool : false,
 	viaje_pos : 0,
 	recurso : array_create(0, 0),
+	recurso_total : 0,
 	misiones : undefined,
 	modelo : 0,
-	hp : 0
+	hp : 0,
+	armas : 0
 }
 naves = array_create(0, null_nave)
 null_empresa = {
@@ -699,7 +711,20 @@ text_y = 0
 dia = 0
 input_layer = 0
 input_data = 0
-show = -1
+show = MENU_NULL
+#region Menús
+	#macro MENU_NULL -1
+	#macro MENU_PRINCIPAL 0
+	#macro MENU_MERCADO 1
+	#macro MENU_MISIONES 2
+	#macro MENU_MISIONES_CONFIRMAR 3
+	#macro MENU_NOTICIAS 4
+	#macro MENU_OFICINA 5
+	#macro MENU_MISIONES_NO_DISPONIBLE 6
+	#macro MENU_CONFIRMAR_CONSTRUIR_OFICINA 7
+	#macro MENU_FABRICAS 8
+	#macro MENU_TALLER 9
+#endregion
 show_empresa = 0
 recurso_multiplicador = array_create(recurso_max, 0)
 for(var a = 0; a < recurso_max; a++)
@@ -722,6 +747,7 @@ counter_imperio = 0
 	nave_nombre = ["SP-crusaider", "KZ-1", "TK-32"]
 	nave_hp = [100, 70, 400]
 	nave_vel = [0.3, 0.5, 0.2]
+	nave_carga = [15, 8, 30]
 	batalla = false
 	batalla_planeta = null_planeta
 	batalla_pirata = null_empresa

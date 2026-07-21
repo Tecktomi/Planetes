@@ -5,7 +5,7 @@ function menu_principal(planeta = control.null_planeta){
 			mouse_clear(mb_right)
 			mouse_clear(mb_left)
 			input_layer = 0
-			show = -1
+			show = MENU_NULL
 			if tutorial = 4
 				tutorial++
 		}
@@ -23,7 +23,7 @@ function menu_principal(planeta = control.null_planeta){
 		ypos += text_y + 30
 		draw_set_halign(fa_center)
 		if draw_text_boton(room_width / 2, ypos, "Mercado", 1){
-			show = 1
+			show = MENU_MERCADO
 			if tutorial = 1
 				tutorial++
 		}
@@ -33,33 +33,31 @@ function menu_principal(planeta = control.null_planeta){
 			for(var b = array_length(planeta.misiones) - 1; b >= 0; b--)
 				a += (jugador.relacion_imperio[? planeta.imperio.index] >= mision_reputacion[planeta.misiones[b]])
 			if draw_text_boton(room_width / 2, ypos, $"Misiones ({a})", 1){
-				show = 2
+				show = MENU_MISIONES
 				if tutorial = 8
 					tutorial++
 			}
 			ypos += text_y + 10
 		}
 		if draw_text_boton(room_width / 2, ypos, $"Noticias ({array_length(noticias)})", 1){
-			show = 4
+			show = MENU_NOTICIAS
 			show_noticia = -1
 		}
 		ypos += text_y + 10
 		if draw_text_boton(room_width / 2, ypos, jugador.oficina_bool[index] ? "Abrir oficina" : "Construir oficiana $20", 1) and (jugador.oficina_bool[index] or jugador.dinero >= 20){
 			if jugador.oficina_bool[index] 
-				show = 5
+				show = MENU_OFICINA
 			else{
-				show = 7
+				show = MENU_CONFIRMAR_CONSTRUIR_OFICINA
 				input_layer = 2
 			}
 		}
 		//Reparar
 		ypos += text_y + 10
-		if nave_select.hp < nave_hp[nave_select.modelo] and jugador.relacion_imperio[? planeta.imperio.index] > 0 and draw_text_boton(room_width / 2, ypos, $"Reparar ${ceil(nave_hp[nave_select.modelo] - nave_select.hp)}", 1) and (jugador.dinero >= ceil(nave_hp[nave_select.modelo] - nave_select.hp)){
-			nave_select.hp = nave_hp[nave_select.modelo]
-			jugador.dinero -= ceil(nave_hp[nave_select.modelo] - nave_select.hp)
-		}
+		if draw_text_boton(room_width / 2, ypos, "Taller", 1)
+			show = MENU_TALLER
 		//Confirmar construir oficina
-		if show = 7{
+		if show = MENU_CONFIRMAR_CONSTRUIR_OFICINA{
 			draw_set_color(c_ltgray)
 			draw_rectangle(250, 200, room_width - 250, room_height - 200, false)
 			draw_set_color(c_black)
@@ -73,7 +71,7 @@ function menu_principal(planeta = control.null_planeta){
 			if mouse_check_button_pressed(mb_left) and (mouse_x < 250 or mouse_y < 200 or mouse_x > room_width - 250 or mouse_y > room_height - 200) or draw_text_boton(room_width - 270, room_height - 250, "No", 2){
 				mouse_clear(mb_left)
 				input_layer = 1
-				show = 0
+				show = MENU_PRINCIPAL
 			}
 			draw_set_halign(fa_left)
 			if draw_text_boton(270, room_height - 250, "Sí", 2){
@@ -81,7 +79,7 @@ function menu_principal(planeta = control.null_planeta){
 				jugador.dinero -= 20
 				jugador.oficina[index] = add_oficina(planeta, jugador)
 				input_layer = 1
-				show = 5
+				show = MENU_OFICINA
 			}
 		}
 	}

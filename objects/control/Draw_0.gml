@@ -40,7 +40,7 @@ if subsistema_vista{
 		var planeta = planetas_terrestres_gigantes[a]
 		draw_planeta(planeta, RW2 + (planeta.x - RW2) / zoom, RH2 + (planeta.y - RH2) / zoom)
 	}
-	if mouse_wheel_up() and show = -1{
+	if mouse_wheel_up() and show = MENU_NULL{
 		subsistema_vista = false
 		if array_contains(planetas_gigantes, nave_select.origen)
 			subsistema = nave_select.origen
@@ -127,7 +127,7 @@ else{
 				RH2 + (temp_viaje.origen_y + (temp_viaje.y - temp_viaje.origen_y) * _viajado - camy) / zoom)
 		}
 	}
-	if mouse_wheel_down() and show = -1
+	if mouse_wheel_down() and show = MENU_NULL
 		subsistema_vista = true
 	if zoom > 1.002
 		zoom = (19 * zoom + 1) / 20
@@ -263,11 +263,11 @@ if nave_select_bool and not nave_select.viaje_bool{
 	}
 	//Comunicación
 	if not planeta.gigante{
-		if show = -1{
+		if show = MENU_NULL{
 			draw_set_halign(fa_center)
 			if draw_text_boton(RW2, room_height - 100, "Abrir comunicación",,, true){
 				input_layer = 1
-				show = 0
+				show = MENU_PRINCIPAL
 				if tutorial = 0
 					tutorial++
 			}
@@ -278,18 +278,20 @@ if nave_select_bool and not nave_select.viaje_bool{
 			draw_roundrect(100, 60, room_width - 100, room_height - 60, false)
 			draw_set_color(gui_panel_front)
 			draw_roundrect(100, 60, room_width - 100, room_height - 60, true)
-			if in(show, 0, 7)
+			if in(show, MENU_PRINCIPAL, MENU_CONFIRMAR_CONSTRUIR_OFICINA)
 				menu_principal(planeta)
-			else if show = 1
+			else if show = MENU_MERCADO
 				menu_mercado(planeta)
-			else if in(show, 2, 3, 6)
+			else if in(show, MENU_MISIONES, MENU_MISIONES_CONFIRMAR, MENU_MISIONES_NO_DISPONIBLE)
 				menu_misiones(planeta)
-			else if show = 4
+			else if show = MENU_NOTICIAS
 				menu_noticias()
-			else if show = 5
+			else if show = MENU_OFICINA
 				menu_oficina(planeta)
-			else if show = 8
+			else if show = MENU_FABRICAS
 				menu_fabricas(planeta)
+			else if show = MENU_TALLER
+				menu_taller(planeta)
 			gpu_set_scissor(0, 0, room_width, room_height)
 		}
 	}
