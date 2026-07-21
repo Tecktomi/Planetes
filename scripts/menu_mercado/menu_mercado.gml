@@ -34,25 +34,12 @@ function menu_mercado(planeta = control.null_planeta){
 				var precio_compra = precio_recurso(a, planeta)
 				if planeta.recurso[a] >= 1 and draw_text_boton(xpos, ypos, $"|Comprar ${precio_compra}|", 1) and jugador.dinero > precio_compra{
 					comprar_recurso(a, 1, planeta, nave_select)
-					for(var b = array_length(jugador.misiones) - 1; b >= 0; b--){
-						var mision = jugador.misiones[b]
-						if not mision.status{
-							if mision.index = mis_desabastecer and mision.data.destino = planeta and mision.data.recurso = a and floor(planeta.recurso[a]) = 0
-								mision_cumplir(mision)
-							else if mision.index = mis_llenar_bodega and mision.data.recurso = a and nave_select.recurso[a] >= mision.data.cantidad
-								mision_cumplir(mision)
-							else if mision.index = mis_electronicos and a = rec_electronicos and array_contains(mision.data.destinos, planeta){
-								array_remove(mision.data.destinos, planeta)
-								var len = array_length(mision.data.destinos)
-								if len = 2
-									mision.nombre = string(mision_texto[mision.index, 1], planeta_nombre(mision.data.destinos[0]), planeta_nombre(mision.data.destinos[1]))
-								else if len = 1
-									mision.nombre = string(mision_texto[mision.index, 2], planeta_nombre(mision.data.destinos[0]))
-								else if len = 0
-									mision_cumplir(mision)
-							}
+					//Misiones
+					for(var b = array_length(misiones_on_compra) - 1; b >= 0; b--)
+						for(var c = array_length(jugador.misiones_index[misiones_on_compra[b]]) - 1; c >= 0; c--){
+							var mision = jugador.misiones_index[misiones_on_compra[b], c]
+							mision_on_compra[misiones_on_compra[b]](mision, planeta, a)
 						}
-					}
 					if tutorial = 2
 						tutorial++
 				}
@@ -69,29 +56,12 @@ function menu_mercado(planeta = control.null_planeta){
 				var precio_venta = precio_recurso(a, planeta, false)
 				if nave_select.recurso[a] > 0 and draw_text_boton(xpos, ypos, $"|Vender ${precio_venta}|", 1){
 					comprar_recurso(a, -1, planeta, nave_select)
-					for(var b = array_length(jugador.misiones) - 1; b >= 0; b--){
-						var mision = jugador.misiones[b]
-						if not mision.status{
-							if mision.index = mis_saturar_mercado and mision.data.destino = planeta and mision.data.recurso = a and precio_recurso(a, planeta, false) <= mision.data.precio
-								mision_cumplir(mision)
-							if mision.index = mis_comida and a = rec_comida and array_contains(mision.data.destinos, planeta) and planeta.recurso[rec_comida] >= 4{
-								if planeta.estado = ESCASEZ and irandom(1)
-									planeta.estado = ESTABLE
-								array_remove(mision.data.destinos, planeta)
-								var len = array_length(mision.data.destinos)
-								if len = 2
-									mision.nombre = string(mision_texto[mision.index, 1], planeta_nombre(mision.data.destinos[0]), planeta_nombre(mision.data.destinos[1]))
-								else if len = 1
-									mision.nombre = string(mision_texto[mision.index, 2], planeta_nombre(mision.data.destinos[0]))
-								else if len = 0
-									mision_cumplir(mision)
-							}
-							if mision.index = mis_armas and a = rec_armas
-								mision_fallar(mision, "Has vendido las armas en el mercado local")
-							if mision.index = mis_salvar_fauna and a = rec_fauna
-								mision_fallar(mision, "Has vendido la fauna en el mercado local")
+					//Misiones
+					for(var b = array_length(misiones_on_venta) - 1; b >= 0; b--)
+						for(var c = array_length(jugador.misiones_index[misiones_on_venta[b]]) - 1; c >= 0; c--){
+							var mision = jugador.misiones_index[misiones_on_venta[b], c]
+							mision_on_venta[misiones_on_venta[b]](mision, planeta, a)
 						}
-					}
 					if tutorial = 7{
 						tutorial++
 						planeta.misiones = array_create(0, 0)

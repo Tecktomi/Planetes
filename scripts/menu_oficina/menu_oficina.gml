@@ -66,15 +66,13 @@ function menu_oficina(planeta = control.null_planeta){
 				if draw_text_boton(xpos, ypos, "<--", 1){
 					nave_select.recurso[a]--
 					oficina.recurso[a]++
-					for(var b = array_length(jugador.misiones) - 1; b >= 0; b--){
-						var mision = jugador.misiones[b]
-						if not mision.status{
-							if mision.index = mis_armas and mision.data.destino = planeta{
-								mision.nombre = string(mision_texto[mision.index, 1], max(0, --mision.data.cantidad), planeta_nombre(mision.data.destino))
-								if mision.data.cantidad <= 0 and oficina.recurso[rec_armas] >= 5{
-									oficina.recurso[rec_armas] -= 5
-									mision_cumplir(mision)
-								}
+					for(var b = array_length(jugador.misiones_index[mis_armas]) - 1; b >= 0; b--){
+						var mision = jugador.misiones_index[mis_armas, b]
+						if not mision.status and mision.data.destino = planeta{
+							mision.nombre = string(mision_texto[mision.index, 1], max(0, --mision.data.cantidad), planeta_nombre(mision.data.destino))
+							if mision.data.cantidad <= 0 and oficina.recurso[rec_armas] >= 5{
+								oficina.recurso[rec_armas] -= 5
+								mision_cumplir(mision)
 							}
 						}
 					}

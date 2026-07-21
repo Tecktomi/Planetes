@@ -12,6 +12,7 @@ function add_empresa(){
 			recurso_venta_precio : array_create(recurso_max, 0),
 			recurso_venta_lugar : array_create(recurso_max, null_planeta),
 			misiones : array_create(0, null_mision),
+			misiones_index : array_create(mision_max, array_create(0, null_mision)),
 			riesgo : random_range(0.95, 1.05),
 			oficina_bool : array_create(planeta_total, false),
 			oficina : array_create(planeta_total, null_oficina),

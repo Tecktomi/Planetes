@@ -7,58 +7,8 @@ function nave_llegar_planeta(nave = control.null_nave){
 		for(var b = array_length(empresa.misiones) - 1; b >= 0; b--){
 			var mision = empresa.misiones[b]
 			if not mision.status{
-				//Viajar
-				if mision.index = mis_viajar{
-					if mision.data.destino = planeta{
-						if mision.data.process++ = 0{
-							do mision.data.destino = array_choose(planetas_no_gigantes)
-							until not (in(mision.data.destino, mision.contratista, planeta) or array_contains(mision.restricciones, mision.data.destino))
-							mision.nombre = string(mision_texto[mision.index, 1], planeta_nombre(mision.data.destino))
-							temp_viaje = calcular_viaje_light(planeta, mision.data.destino)
-							mision.fecha += 3 * temp_viaje.dis
-							mision.paga += 3 * mision.data.destino.luna_externa
-						}
-						else
-							mision_cumplir(mision)
-					}
-				}
-				//Explorar
-				else if mision.index = mis_recoger_informacion{
-					if array_contains(mision.data.destinos, planeta){
-						array_remove(mision.data.destinos, planeta)
-						var len = array_length(mision.data.destinos)
-						if len = 2
-							mision.nombre = string(mision_texto[mision.index, 1], planeta_nombre(mision.data.destinos[0]), planeta_nombre(mision.data.destinos[1]))
-						else if len = 1
-							mision.nombre = string(mision_texto[mision.index, 2], planeta_nombre(mision.data.destinos[0]))
-						else
-							mision_cumplir(mision)
-					}
-				}
-				//Espiar
-				else if mision.index = mis_espiar_empresas
-					mision.nombre = string(mision_texto[mision.index, (mision.data.destino = planeta) ? 1 : 0], planeta_nombre(mision.data.destino), mision.data.cantidad)
-				//Artefacto
-				else if mision.index = mis_artefacto{
-					if mision.data.destino = planeta{
-						if empresa = jugador{
-							add_noticia("Artefacto encontrado", "Artefacto encontrado")
-							if tutorial = 12
-								tutorial++
-						}
-						mision_cumplir(mision)
-					}
-				}
-				//Viaje Express
-				else if mision.index = mis_viaje_express{
-					if nave.viaje_pos > mision.data.cantidad
-						mision_fallar(mision, "Tu viaje ha sido demasiado largo")
-					else if planeta = mision.data.destino
-						mision_cumplir(mision)
-				}
-				//Piratería
-				else if mision.index = mis_pirateria
-					mision.nombre = string(mision_texto[mision.index, (mision.data.destino = planeta) ? 1 : 0], planeta_nombre(mision.data.destino))
+				if not is_undefined(mision_on_viaje[mision.index])
+					mision_on_viaje[mision.index](mision, planeta)
 				//Restricciones
 				if in(mision.restricciones, planeta)
 					mision_fallar(mision, $"Has pasado por {planeta_nombre(planeta)}")
@@ -176,33 +126,13 @@ function nave_llegar_planeta(nave = control.null_nave){
 		//Misiones de espionaje
 		for(var c = array_length(empresas) - 1; c >= 0; c--){
 			empresa = empresas[c]
-			for(var b = array_length(empresa.misiones) - 1; b >= 0; b--){
-				var mision = empresa.misiones[b]
-				if not mision.status and mision.nave_asignada.origen = planeta and not mision.nave_asignada.viaje_bool and nave.empresa != empresa{
-					if mision.index = mis_espiar_empresas and mision.data.destino = planeta{
-						if not array_contains(mision.data.empresas, nave.empresa)
-							array_push(mision.data.empresas, nave.empresa)
-						mision.nombre = string(mision_texto[mision.index, 1], planeta_nombre(mision.data.destino), --mision.data.cantidad)
-						if mision.data.cantidad <= 0{
-							mision_cumplir(mision)
-							if empresa = jugador
-								pasar_dia_bool = false
-							else
-								nave_npc_viajar(mision.nave_asignada, planeta)
-						}
-					}
-					if mision.index = mis_espiar_planeta and mision.data.destino = planeta{
-						if empresa = jugador{
-							mision_fallar(mision, "Alguien te ha visto")
-							pasar_dia_bool = false
-						}
-						else{
-							nave.destino = array_choose(planetas_no_gigantes)
-							nave.viaje = calcular_viaje_light(planeta, nave.destino)
-							nave.viaje_bool = true
-						}
-					}
-				}
+			for(var b = array_length(empresa.misiones_index[mis_espiar_empresas]) - 1; b >= 0; b--){
+				var mision = empresa.misiones_index[mis_espiar_empresas, b]
+				mision_on_especial[mis_espiar_empresas](mision, planeta, empresa, nave)
+			}
+			for(var b = array_length(empresa.misiones_index[mis_espiar_planeta]) - 1; b >= 0; b--){
+				var mision = empresa.misiones_index[mis_espiar_planeta, b]
+				mision_on_especial[mis_espiar_planeta](mision, planeta, empresa, nave)
 			}
 		}
 	}

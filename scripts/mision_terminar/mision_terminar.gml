@@ -35,10 +35,8 @@ function mision_terminar(mision = control.null_mision){
 			misiones_cumplidas++
 		}
 		empresa.dinero += mision.paga
+		array_disorder_remove(empresa.misiones, mision, 0)
 		array_disorder_remove(mision.nave_asignada.misiones, mision, 1)
-		var len = array_length(empresa.misiones), pos = mision.pointer[0]
-		empresa.misiones[pos] = empresa.misiones[len - 1]
-		empresa.misiones[pos].pointer[0] = pos
-		array_pop(empresa.misiones)
+		array_disorder_remove(empresa.misiones_index[index], mision, 2)
 	}
 }

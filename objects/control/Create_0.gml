@@ -154,34 +154,168 @@ cursor = cr_default
 	#endregion
 #endregion
 #region Misiones
-	mision_nombre = array_create(0, "")
-	mision_paga = array_create(0, 0)
-	mision_reputacion = array_create(0, 0)
-	mision_penalizacion = array_create(0, 0)
-	mision_recompensa = array_create(0, 0)
-	function def_mision(nombre, paga = 0, rep_min = 0, rep_fallo = 0, rep_exito = 0){
+	#region arrays
+		mision_nombre = array_create(0, "")
+		mision_paga = array_create(0, 0)
+		mision_reputacion = array_create(0, 0)
+		mision_penalizacion = array_create(0, 0)
+		mision_recompensa = array_create(0, 0)
+		mision_on_compra = array_create(0, function(){})
+		mision_on_venta = array_create(0, function(){})
+		mision_on_viaje = array_create(0, function(){})
+		mision_on_especial = array_create(0, function(){})
+	#endregion
+	function def_mision(nombre, paga = 0, rep_min = 0, rep_fallo = 0, rep_exito = 0, on_compra = undefined, on_venta = undefined, on_viaje = undefined, on_especial = undefined){
 		array_push(mision_nombre, string(nombre))
 		array_push(mision_paga, paga)
 		array_push(mision_reputacion, rep_min)
 		array_push(mision_penalizacion, rep_fallo)
 		array_push(mision_recompensa, rep_exito)
+		array_push(mision_on_compra, on_compra)
+		array_push(mision_on_venta, on_venta)
+		array_push(mision_on_viaje, on_viaje)
 		return array_length(mision_nombre) - 1
 	}
-	mis_viajar = def_mision("Viajar", 5, -1, 1, 0.5)
-	mis_desabastecer = def_mision("Desabastecer", 20, 0, 1, 1)
-	mis_recoger_informacion = def_mision("Recoger información", 15, -1, 1, 1)
-	mis_saturar_mercado = def_mision("Saturar mercado", 10, 0, 3, 2)
-	mis_llenar_bodega = def_mision("Llenar bodega", 15, 0, 1, 0.5)
-	mis_espiar_empresas = def_mision("Espiar empresas", 10, 1, 1, 1.5)
-	mis_espiar_planeta = def_mision("Investigar encubierto", 20, 1, 2, 2)
-	mis_electronicos = def_mision("Conseguir electrónicos", 25, 0, 3, 2)
-	mis_salvar_fauna = def_mision("Salvar fauna salvaje", 10, 0, 3, 2)
-	mis_comida = def_mision("Entregar comida", 15, 0, 3, 2)
+	mis_viajar = def_mision("Viajar", 5, -1, 1, 0.5,,,
+		function(mision, planeta){//on_viaje
+			if mision.data.destino = planeta{
+				if mision.data.process++ = 0{
+					var temp_array = array_shuffle(planetas_no_gigantes), flag = true
+					for(var a = array_length(temp_array) - 1; a >= 0; a--)
+						if not (in(temp_array[a], mision.contratista, planeta) or array_contains(mision.restricciones, temp_array[a])){
+							mision.data.destino = temp_array[a]
+							flag = false
+							break
+						}
+					if flag
+						mision_cumplir(mision)
+					mision.nombre = string(mision_texto[mision.index, 1], planeta_nombre(mision.data.destino))
+					temp_viaje = calcular_viaje_light(planeta, mision.data.destino)
+					mision.fecha += 3 * temp_viaje.dis
+					mision.paga += 3 * mision.data.destino.luna_externa
+				}
+				else
+					mision_cumplir(mision)
+		}})
+	mis_desabastecer = def_mision("Desabastecer", 20, 0, 1, 1,
+		function(mision, planeta, recurso){
+			if not mision.status and mision.data.destino = planeta and mision.data.recurso = recurso and floor(planeta.recurso[recurso]) = 0
+				mision_cumplir(mision)
+		})
+	mis_recoger_informacion = def_mision("Recoger información", 15, -1, 1, 1,,,
+		function(mision, planeta){
+			if array_contains(mision.data.destinos, planeta){
+				array_remove(mision.data.destinos, planeta)
+				var len = array_length(mision.data.destinos)
+				if len = 2
+					mision.nombre = string(mision_texto[mision.index, 1], planeta_nombre(mision.data.destinos[0]), planeta_nombre(mision.data.destinos[1]))
+				else if len = 1
+					mision.nombre = string(mision_texto[mision.index, 2], planeta_nombre(mision.data.destinos[0]))
+				else
+					mision_cumplir(mision)
+		}})
+	mis_saturar_mercado = def_mision("Saturar mercado", 10, 0, 3, 2,,
+		function(mision, planeta, recurso){
+			if not mision.status and mision.data.destino = planeta and mision.data.recurso = recurso and precio_recurso(recurso, planeta, false) <= mision.data.precio
+				mision_cumplir(mision)
+		})
+	mis_llenar_bodega = def_mision("Llenar bodega", 15, 0, 1, 0.5,
+		function(mision, planeta, recurso){
+			if not mision.status and mision.data.recurso = recurso and nave_select.recurso[recurso] >= mision.data.cantidad
+				mision_cumplir(mision)
+		})
+	mis_espiar_empresas = def_mision("Espiar empresas", 10, 1, 1, 1.5,,,
+		function(mision, planeta){
+			mision.nombre = string(mision_texto[mision.index, (mision.data.destino = planeta) ? 1 : 0], planeta_nombre(mision.data.destino), mision.data.cantidad)
+		},
+		function(mision, planeta, empresa, nave){
+			if not mision.status and mision.nave_asignada.origen = planeta and not mision.nave_asignada.viaje_bool and nave.empresa != empresa and mision.data.destino = planeta{
+				if not array_contains(mision.data.empresas, nave.empresa)
+					array_push(mision.data.empresas, nave.empresa)
+				mision.nombre = string(mision_texto[mision.index, 1], planeta_nombre(mision.data.destino), --mision.data.cantidad)
+				if mision.data.cantidad <= 0{
+					mision_cumplir(mision)
+					if empresa = jugador
+						pasar_dia_bool = false
+					else
+						nave_npc_viajar(mision.nave_asignada, planeta)
+				}
+			}
+		})
+	mis_espiar_planeta = def_mision("Investigar encubierto", 20, 1, 2, 2,,,,
+		function(mision, planeta, empresa, nave){
+			if not mision.status and mision.nave_asignada.origen = planeta and not mision.nave_asignada.viaje_bool and nave.empresa != empresa and mision.data.destino = planeta{
+				if empresa = jugador{
+					mision_fallar(mision, "Alguien te ha visto")
+					pasar_dia_bool = false
+				}
+				else{
+					nave.destino = array_choose(planetas_no_gigantes)
+					nave.viaje = calcular_viaje_light(planeta, nave.destino)
+					nave.viaje_bool = true
+				}
+			}
+		})
+	mis_electronicos = def_mision("Conseguir electrónicos", 25, 0, 3, 2,
+		function(mision, planeta, recurso){
+			if not mision.status and recurso = rec_electronicos and array_contains(mision.data.destinos, planeta){
+				array_remove(mision.data.destinos, planeta)
+				var len = array_length(mision.data.destinos)
+				if len = 2
+					mision.nombre = string(mision_texto[mision.index, 1], planeta_nombre(mision.data.destinos[0]), planeta_nombre(mision.data.destinos[1]))
+				else if len = 1
+					mision.nombre = string(mision_texto[mision.index, 2], planeta_nombre(mision.data.destinos[0]))
+				else if len = 0
+					mision_cumplir(mision)
+			}
+		})
+	mis_salvar_fauna = def_mision("Salvar fauna salvaje", 10, 0, 3, 2,,
+		function(mision, planeta, recurso){
+			if not mision.status and recurso = rec_fauna
+				mision_fallar(mision, "Has vendido los animales en el mercado local")
+		})
+	mis_comida = def_mision("Entregar comida", 15, 0, 3, 2,,
+		function(mision, planeta, recurso){
+			if not mision.status and recurso = rec_comida and array_contains(mision.data.destinos, planeta) and planeta.recurso[rec_comida] >= 4{
+				if planeta.estado = ESCASEZ and irandom(1)
+					planeta.estado = ESTABLE
+				array_remove(mision.data.destinos, planeta)
+				var len = array_length(mision.data.destinos)
+				if len = 2
+					mision.nombre = string(mision_texto[mision.index, 1], planeta_nombre(mision.data.destinos[0]), planeta_nombre(mision.data.destinos[1]))
+				else if len = 1
+					mision.nombre = string(mision_texto[mision.index, 2], planeta_nombre(mision.data.destinos[0]))
+				else if len = 0
+					mision_cumplir(mision)
+			}
+		})
 	mis_fallar = def_mision("Fallar misión", 20, 1, 1, 2)
-	mis_armas = def_mision("Economía de guerra", 20, 0, 3, 2)
-	mis_artefacto = def_mision("Encontrar artefacto", 15, 0, 1, 1)
-	mis_viaje_express = def_mision("Viaje express", 10, -1, 2, 1)
-	mis_pirateria = def_mision("Piratería", 20, 4, 2, 2)
+	mis_armas = def_mision("Economía de guerra", 20, 0, 3, 2,,
+		function(mision, planeta, recurso){
+			if not mision.status and recurso = rec_armas
+				mision_fallar(mision, "Has vendido las armas en el mercado local")
+		})
+	mis_artefacto = def_mision("Encontrar artefacto", 15, 0, 1, 1,,,
+		function(mision, planeta){
+			if mision.data.destino = planeta{
+				if empresa = jugador{
+					add_noticia("Artefacto encontrado", "Artefacto encontrado")
+					if tutorial = 12
+						tutorial++
+				}
+				mision_cumplir(mision)
+		}})
+	mis_viaje_express = def_mision("Viaje express", 10, -1, 2, 1,,,
+		function(mision, planeta){
+			if nave.viaje_pos > mision.data.cantidad
+				mision_fallar(mision, "Tu viaje ha sido demasiado largo")
+			else if planeta = mision.data.destino
+				mision_cumplir(mision)
+		})
+	mis_pirateria = def_mision("Piratería", 20, 4, 2, 2,,,
+		function(mision, planeta){
+			mision.nombre = string(mision_texto[mision.index, (mision.data.destino = planeta) ? 1 : 0], planeta_nombre(mision.data.destino))
+		})
 	mision_max = array_length(mision_nombre)
 	arquetipo_mision_frecuencia = [
 		[3, 3, 2, 3, 2, 1, 2, 0, 0, 0, 2, 0, 3, 1, 2],
@@ -189,23 +323,36 @@ cursor = cr_default
 		[2, 2, 2, 0, 3, 2, 1, 0, 3, 0, 1, 0, 2, 3, 1],
 		[4, 2, 2, 0, 1, 2, 3, 0, 0, 3, 0, 0, 2, 2, 0],
 		[2, 3, 2, 0, 1, 2, 3, 0, 0, 0, 2, 3, 2, 1, 3]]
-	mision_texto = [
-		["Viajar a {0}", "Ahora viaja a {0}"],
-		["Compra todo el {0} de {1}"],
-		["Visita {0}, {1} y {2}", "Visita {0} y {1}", "Visita {0}"],
-		["Baja el precio de venta de {0} en {1} a ${2}"],
-		["Acumula {0} de {1} en tu nave"],
-		["Viaja a {0} y espera a que {1} naves pasen por ahí", "Quédate en {0} y espera a que {1} naves pasen por ahí"],
-		["Viaja a {0}, una vez ahí, quédate {1} días sin que nadie te vea", "Quédate en {0} {1} días sin que nadie te vea"],
-		["Tráenos electrónicos de {0}, {1} y {2}", "Tráenos electrónicos de {0} y {1}", "Tráenos electrónicos de {0}"],
-		["Lleva 5 animales a una oficina comercial y déjalos ahí {0} días", "Deja los animales en la oficina comercial por {0} días"],
-		["Lleva al menos 4 de comida a {0}, {1} y {2}", "Lleva al menos 4 de comida a {0} y {1}", "Lleva al menos 4 de comida a {0}"],
-		["Falla en una misión del planeta {0}"],
-		["Lleva {0} armas a una oficina comercial en {1} y déjalas ahí, sin pasar por el mercado","Lleva {0} armas más a la oficina comercial en {1} y déjalas ahí, sin pasar por el mercado"],
-		["Busca el artefacto perdido entre las lunas de {0}"],
-		["Viaja a {0} cuando el viaje a este dure menos de {1} días"],
-		["Viaja a {0}, una vez ahí, asalta a la primera nave que llegue", "Quédate en {0} y asalta a la primera nave que llegue"]
-	]
+	#region mision_texto
+		mision_texto = [
+			["Viajar a {0}", "Ahora viaja a {0}"],
+			["Compra todo el {0} de {1}"],
+			["Visita {0}, {1} y {2}", "Visita {0} y {1}", "Visita {0}"],
+			["Baja el precio de venta de {0} en {1} a ${2}"],
+			["Acumula {0} de {1} en tu nave"],
+			["Viaja a {0} y espera a que {1} naves pasen por ahí", "Quédate en {0} y espera a que {1} naves pasen por ahí"],
+			["Viaja a {0}, una vez ahí, quédate {1} días sin que nadie te vea", "Quédate en {0} {1} días sin que nadie te vea"],
+			["Tráenos electrónicos de {0}, {1} y {2}", "Tráenos electrónicos de {0} y {1}", "Tráenos electrónicos de {0}"],
+			["Lleva 5 animales a una oficina comercial y déjalos ahí {0} días", "Deja los animales en la oficina comercial por {0} días"],
+			["Lleva al menos 4 de comida a {0}, {1} y {2}", "Lleva al menos 4 de comida a {0} y {1}", "Lleva al menos 4 de comida a {0}"],
+			["Falla en una misión del planeta {0}"],
+			["Lleva {0} armas a una oficina comercial en {1} y déjalas ahí, sin pasar por el mercado","Lleva {0} armas más a la oficina comercial en {1} y déjalas ahí, sin pasar por el mercado"],
+			["Busca el artefacto perdido entre las lunas de {0}"],
+			["Viaja a {0} cuando el viaje a este dure menos de {1} días"],
+			["Viaja a {0}, una vez ahí, asalta a la primera nave que llegue", "Quédate en {0} y asalta a la primera nave que llegue"]
+		]
+	#endregion
+	misiones_on_viaje = array_create(0, 0)
+	misiones_on_compra = array_create(0, 0)
+	misiones_on_venta = array_create(0, 0)
+	for(var a = 0; a < mision_max; a++){
+		if not is_undefined(mision_on_viaje[a])
+			array_push(misiones_on_viaje, a)
+		if not is_undefined(mision_on_compra[a])
+			array_push(misiones_on_compra, a)
+		if not is_undefined(mision_on_venta[a])
+			array_push(misiones_on_venta, a)
+	}
 	#region tag_mision_multiple
 		tag_mision_multiple = array_create(mision_max, false)
 		tag_mision_multiple[mis_recoger_informacion] = true
@@ -488,8 +635,8 @@ null_mision = {
 	status : false,
 	paga : 0,
 	data : {},
-	//0: empresa.misiones
-	pointer : array_create(1, 0),
+	//0: empresa.misiones, 1: nave.misiones, 2.empresa.mision_index
+	pointer : array_create(3, 0),
 	restricciones : array_create(0, null_planeta),
 	restricciones_texto : "",
 	//Para los NPC
@@ -530,7 +677,6 @@ ds_map_clear(null_imperio.relacion_empresa_piso)
 null_planeta.imperio = null_imperio
 imperios = array_create(0, null_imperio)
 //Variables
-estado_diplomatico = 0
 planetas_arquetipo = array_create(arquetipo_max)
 for(var a = 0; a < arquetipo_max; a++)
 	planetas_arquetipo[a] = array_create(0, null_planeta)

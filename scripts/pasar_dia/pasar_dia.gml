@@ -24,19 +24,17 @@ function pasar_dia(){
 					nave_llegar_planeta(nave)
 			}
 			else{
-				for(var b = array_length(empresa.misiones) - 1; b >= 0; b--){
-					var mision = empresa.misiones[b]
+				for(var b = array_length(empresa.misiones_index[mis_espiar_planeta]) - 1; b >= 0; b--){
+					var mision = empresa.misiones_index[mis_espiar_planeta, b]
 					if not mision.status and tag_mision_espiar[mision.index] and nave.origen = mision.data.destino{
 						mision.fecha++
-						if mision.index = mis_espiar_planeta{
-							mision.nombre = string(mision_texto[mision.index, 1], planeta_nombre(mision.data.destino), --mision.data.cantidad)
-							if mision.data.cantidad <= 0{
-								mision_cumplir(mision)
-								if empresa = jugador
-									pasar_dia_bool = false
-								else
-									nave_npc_viajar(mision.nave_asignada, nave.origen)
-							}
+						mision.nombre = string(mision_texto[mision.index, 1], planeta_nombre(mision.data.destino), --mision.data.cantidad)
+						if mision.data.cantidad <= 0{
+							mision_cumplir(mision)
+							if empresa = jugador
+								pasar_dia_bool = false
+							else
+								nave_npc_viajar(mision.nave_asignada, nave.origen)
 						}
 					}
 				}
@@ -44,20 +42,18 @@ function pasar_dia(){
 		}
 		for(var a = array_length(empresas) - 1; a >= 0; a--){
 			var empresa = empresas[a]
-			for(var b = array_length(empresa.misiones) - 1; b >= 0; b--){
-				var mision = empresa.misiones[b]
+			for(var b = array_length(empresa.misiones_index[mis_salvar_fauna]) - 1; b >= 0; b--){
+				var mision = empresa.misiones_index[mis_salvar_fauna, b]
 				if dia >= mision.fecha
 					mision_fallar(mision, "Se te ha acabado el plazo")
-				if mision.index = mis_salvar_fauna{
-					for(var c = array_length(planetas_no_gigantes) - 1; c >= 0; c--)
-						if empresa.oficina_bool[c] and empresa.oficina[c].recurso[rec_fauna] >= 5{
-							mision.fecha++
-							mision.nombre = string(mision_texto[mision.index, 1], --mision.data.cantidad)
-							if mision.data.cantidad <= 0
-								mision_cumplir(mision)
-							break
-						}
-				}
+				for(var c = array_length(planetas_no_gigantes) - 1; c >= 0; c--)
+					if empresa.oficina_bool[c] and empresa.oficina[c].recurso[rec_fauna] >= 5{
+						mision.fecha++
+						mision.nombre = string(mision_texto[mision.index, 1], --mision.data.cantidad)
+						if mision.data.cantidad <= 0
+							mision_cumplir(mision)
+						break
+					}
 			}
 		}
 		//Eventos anuales
