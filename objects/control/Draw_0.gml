@@ -1,5 +1,5 @@
 //Batallas
-if batalla_planeta != null_planeta{
+if batalla_planeta != null_planeta and show = MENU_NULL{
 	scr_batalla()
 	exit
 }
@@ -134,36 +134,6 @@ else{
 	else
 		zoom = 1
 }
-//Alerta piratas
-if show = MENU_BATALLA{
-	draw_set_color(c_ltgray)
-	draw_rectangle(250, 200, room_width - 250, room_height - 200, false)
-	draw_set_color(c_black)
-	draw_rectangle(250, 200, room_width - 250, room_height - 200, true)
-	draw_set_halign(fa_center)
-	draw_text(RW2, 220, "¡Te ha asaltado un pirata!\n\n¿Soltar la carga para que nos deje ir?")
-	draw_set_halign(fa_left)
-	if mouse_check_button_pressed(mb_left) and (mouse_x < 250 or mouse_y < 200 or mouse_x > room_width - 250 or mouse_y > room_height - 200) or draw_text_boton(RW2 + 20, room_height - 250, "No", 1){
-		mouse_clear(mb_left)
-		input_layer = 0
-		show = MENU_NULL
-	}
-	draw_set_halign(fa_right)
-	if draw_text_boton(RW2 - 20, room_height - 250, "Sí", 1){
-		for(var a = 0; a < recurso_max; a++){
-			var b = nave_select.recurso[a]
-			batalla_pirata.recurso[a] += b
-			batalla_pirata.recurso_total += b
-		}
-		nave_select.recurso_total = 0
-		batalla_pirata.pirata_step = 0
-		array_disorder_remove(naves_piratas, batalla_pirata, 2)
-		array_resize(batalla_naves, 0)
-		batalla_planeta = null_planeta
-		batalla_pirata = null_nave
-			
-	}
-}
 if draw_sprite_boton(spr_icon, gui_draw_path ? 3 : 4, 4, room_height - 36, 2, 2)
 	gui_draw_path = not gui_draw_path
 if draw_sprite_boton(spr_icon, gui_draw_relacion ? 5 : 6, 40, room_height - 36, 2, 2)
@@ -178,6 +148,7 @@ if draw_sprite_boton(spr_icon, (nave_select.pirata_step > 0) ? 7 : 8, 76, room_h
 		array_disorder_remove(nave_select, naves_piratas, 2)
 	}
 }
+draw_text(120, room_height - 36, miedo_pirata)
 //Dibujar misiones activas
 if array_length(jugador.misiones) > 0{
 	var temp_text = ""
@@ -330,6 +301,51 @@ if nave_select_bool and not nave_select.viaje_bool{
 				menu_fabricas(planeta)
 			else if show = MENU_TALLER
 				menu_taller(planeta)
+			else if show = MENU_BATALLA{
+				draw_set_color(c_ltgray)
+				draw_rectangle(250, 200, room_width - 250, room_height - 200, false)
+				draw_set_color(c_black)
+				draw_rectangle(250, 200, room_width - 250, room_height - 200, true)
+				draw_set_halign(fa_center)
+				draw_text(RW2, 220, "¡Te ha asaltado un pirata!\n\n¿Soltar la carga para que nos deje ir?")
+				draw_set_halign(fa_left)
+				if mouse_check_button_pressed(mb_left) and (mouse_x < 250 or mouse_y < 200 or mouse_x > room_width - 250 or mouse_y > room_height - 200) or draw_text_boton(RW2 + 20, room_height - 250, "No", 1){
+					mouse_clear(mb_left)
+					input_layer = 0
+					show = MENU_NULL
+					miedo_pirata++
+				}
+				draw_set_halign(fa_right)
+				if draw_text_boton(RW2 - 20, room_height - 250, "Sí", 1){
+					mouse_clear(mb_left)
+					input_layer = 0
+					show = MENU_NULL
+					var diff = batalla_pirata.bodega - batalla_pirata.recurso_total
+					for(var a = 0; a < recurso_max; a++){
+						var b = nave_select.recurso[a]
+						if diff < b{
+							batalla_pirata.recurso[a] += diff
+							batalla_pirata.recurso_total += diff
+							nave_select.recurso[a] -= diff
+							nave_select.recurso_total -= diff
+							break
+						}
+						else{
+							batalla_pirata.recurso[a] += b
+							batalla_pirata.recurso_total += b
+							nave_select.recurso[a] = 0
+							nave_select.recurso_total -= b
+							diff -= b
+						}
+					}
+					batalla_pirata.pirata_step = 0
+					array_disorder_remove(naves_piratas, batalla_pirata, 2)
+					array_resize(batalla_naves, 0)
+					batalla_planeta = null_planeta
+					batalla_pirata = null_nave
+			
+				}
+			}
 			gpu_set_scissor(0, 0, room_width, room_height)
 		}
 	}

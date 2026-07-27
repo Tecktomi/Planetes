@@ -76,7 +76,7 @@ function menu_oficina(planeta = control.null_planeta){
 			}
 			draw_text_pos(xpos, ypos, $"|{nave_select.recurso[a]}|")
 			xpos += text_x
-			if oficina.recurso[a] > 0 and nave_select.recurso_total < nave_carga[nave_select.modelo] - 5 * nave_select.armas and draw_text_boton(xpos, ypos, "-->", 1){
+			if oficina.recurso[a] > 0 and nave_select.recurso_total < nave_select.bodega and draw_text_boton(xpos, ypos, "-->", 1){
 				nave_select.recurso[a]++
 				nave_select.recurso_total++
 				oficina.recurso[a]--

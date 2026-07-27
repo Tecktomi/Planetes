@@ -12,7 +12,7 @@ function menu_taller(planeta = control.null_planeta){
 		//Reparar
 		draw_set_halign(fa_left)
 		if nave_select.hp < nave_hp[nave_select.modelo] and jugador.relacion_imperio[? planeta.imperio.index] > 0{
-			var precio = ceil(nave_hp[nave_select.modelo] - nave_select.hp)
+			var precio = reparar_nave(nave_select)
 			if draw_text_boton(130, ypos, $"Reparar ${precio}", 1) and jugador.dinero >= precio{
 				nave_select.hp = nave_hp[nave_select.modelo]
 				jugador.dinero -= precio
@@ -27,17 +27,18 @@ function menu_taller(planeta = control.null_planeta){
 		ypos += text_y * 1.1
 		draw_text_pos(RW2 + 20, ypos, $"Velocidad: {floor(10 * nave_vel[nave_select.modelo])}")
 		ypos += text_y * 1.1
-		draw_text_pos(RW2 + 20, ypos, $"Carga: {nave_select.recurso_total}/{nave_carga[nave_select.modelo] - 5 * nave_select.armas}")
+		draw_text_pos(RW2 + 20, ypos, $"Carga: {nave_select.recurso_total}/{nave_select.bodega}")
 		ypos += text_y * 1.1
 		draw_text_pos(RW2 + 20, ypos, $"Armamento: {nave_select.armas}/{floor(nave_carga[nave_select.modelo] / 5)}")
 		ypos += text_y * 1.1
 		//Equipar armas
 		if jugador.relacion_imperio[? planeta.imperio.index] > -2{
-			var precio = 100 - 20 * (planeta.arquetipo = MILITAR)
+			var precio = precio_armas(planeta.imperio)
 			if nave_select.armas < floor(nave_carga[nave_select.modelo] / 5){
 				if draw_text_boton(130, ypos, $"Comprar armas ${precio}", 1) and jugador.dinero >= precio{
 					jugador.dinero -= precio
 					nave_select.armas++
+					nave_select.bodega -= 5
 				}
 				ypos += text_y * 1.2
 			}
@@ -46,6 +47,7 @@ function menu_taller(planeta = control.null_planeta){
 				if draw_text_boton(130, ypos, $"Vender armas ${precio}", 1){
 					jugador.dinero += precio
 					nave_select.armas--
+					nave_select.bodega += 5
 				}
 			}
 		}

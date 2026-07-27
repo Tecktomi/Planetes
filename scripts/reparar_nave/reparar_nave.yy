@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"reparar_nave",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"reparar_nave",
+  "parent":{
+    "name":"Planetes",
+    "path":"Planetes.yyp",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

@@ -67,6 +67,7 @@ function pasar_dia(){
 		}
 		//Eventos anuales
 		if (dia mod 300) = 0{
+			miedo_pirata *= 0.9
 			for(var a = array_length(empresas) - 1; a >= 0; a--){
 				var empresa = empresas[a], temp_text = ""
 				for(var b = 0; b < recurso_max; b++){

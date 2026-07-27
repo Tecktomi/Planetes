@@ -1,4 +1,4 @@
-function add_nave(empresa = control.null_empresa, modelo = 0){
+function add_nave(empresa = control.null_empresa, modelo = 0, armas = 1){
 	with control{
 		var nave = {
 			index : counter_nave++,
@@ -15,9 +15,10 @@ function add_nave(empresa = control.null_empresa, modelo = 0){
 			misiones : array_create(0, null_mision),
 			modelo : modelo,
 			hp : nave_hp[modelo],
-			armas : 1,
+			armas : armas,
 			pirata_step : 0,
-			alive : true
+			alive : true,
+			bodega : nave_carga[modelo] - 5 * armas
 		}
 		array_disorder_push(naves, nave, 0)
 		array_disorder_push(empresa.naves, nave, 1)

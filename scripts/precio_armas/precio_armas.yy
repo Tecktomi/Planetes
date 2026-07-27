@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"precio_armas",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"precio_armas",
+  "parent":{
+    "name":"Planetes",
+    "path":"Planetes.yyp",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

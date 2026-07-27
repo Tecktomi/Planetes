@@ -625,7 +625,8 @@ null_nave = {
 	hp : 0,
 	armas : 0,
 	pirata_step : 0,
-	alive : false
+	alive : false,
+	bodega : 0
 }
 naves = array_create(0, null_nave)
 naves_piratas = array_create(0, null_nave)
@@ -649,7 +650,8 @@ null_empresa = {
 	relacion_imperio : ds_map_create(),
 	relacion_imperio_motivo : array_create(relacion_motivo_max),
 	pirata : 0,
-	alive : false
+	alive : false,
+	imperio_favorito : undefined
 }
 ds_map_add(null_empresa.relacion_imperio, 0, 0)
 ds_map_clear(null_empresa.relacion_imperio)
@@ -710,6 +712,7 @@ ds_map_add(null_imperio.relacion_imperio, 0, 0)
 ds_map_clear(null_imperio.relacion_imperio)
 ds_map_add(null_imperio.relacion_empresa, 0, 0)
 ds_map_clear(null_imperio.relacion_empresa)
+null_empresa.imperio_favorito = null_imperio
 for(var a = 0; a < relacion_motivo_max; a++){
 	var temp_map = ds_map_create()
 	ds_map_add(temp_map, 0, 0)
@@ -837,6 +840,9 @@ counter_imperio = 0
 	batalla_camx = 0
 	batalla_camy = 0
 	batalla_background = undefined
+	miedo_pirata = 0
+	#macro pirata_arma_min 1
+	#macro pirata_botin_min 4
 	#macro batalla_dis_freno 10_000 //100^2
 	#macro batalla_hitbox 625 // 25^2
 	#macro batalla_sidex 320

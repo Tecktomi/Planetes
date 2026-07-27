@@ -23,7 +23,7 @@ function nave_llegar_planeta(nave = control.null_nave){
 		nave.viaje_pos = 0
 		for(var a = array_length(naves_piratas) - 1; a >= 0; a--){
 			var pirata = naves_piratas[a]
-			if pirata.empresa != empresa and pirata.origen = planeta
+			if pirata.empresa != empresa and pirata.origen = planeta and nave.recurso_total >= pirata_botin_min
 				if batalla_start(planeta, pirata, nave)
 					return true
 		}
@@ -93,7 +93,7 @@ function nave_llegar_planeta(nave = control.null_nave){
 					empresa.recurso_compra_precio[b] = precio_compra
 					empresa.recurso_compra_lugar[b] = planeta
 					if not flag_saturar
-						while planeta.recurso[b] >= 1 and nave.recurso_total < nave_carga[nave.modelo] - 5 * nave.armas and empresa.dinero >= precio_compra and (precio_compra < empresa.recurso_venta_precio[b] or flag_bodega or flag_desabastecer or flag_electronicos){
+						while planeta.recurso[b] >= 1 and nave.recurso_total < nave.bodega and empresa.dinero >= precio_compra and (precio_compra < empresa.recurso_venta_precio[b] or flag_bodega or flag_desabastecer or flag_electronicos){
 							comprar_recurso(b, 1, planeta, nave)
 							precio_compra = precio_recurso(b, planeta, true)
 							//Misión desabastecer
@@ -124,7 +124,19 @@ function nave_llegar_planeta(nave = control.null_nave){
 				if tag_mision_ia[b] and temp_reputacion >= mision_reputacion[b] and dia - empresa.ultima_falla[b] > 1500
 					mision_aceptar(b, planeta, empresa, nave)
 			}
-			if random(1) > empresa.pirata{
+			//Reparar
+			if nave.hp < nave_hp[nave.modelo] and irandom(1) = 0 and nave.empresa.dinero > reparar_nave(nave){
+				nave.empresa.dinero -= reparar_nave(nave)
+				nave.hp = nave_hp[nave.modelo]
+			}
+			//Comprar armas
+			if nave.bodega > 5 and random(1) > empresa.pirata and empresa.dinero >= precio_armas(planeta.imperio){
+				empresa.dinero -= precio_armas(planeta.imperio)
+				nave.armas++
+				nave.bodega -= 5
+			}
+			//Piratear
+			if nave.armas >= pirata_arma_min and planeta.imperio != empresa.imperio_favorito and random(1 / (1 + miedo_pirata)) > empresa.pirata{
 				nave.pirata_step = irandom_range(1, 300)
 				array_disorder_push(naves_piratas, nave, 2)
 			}

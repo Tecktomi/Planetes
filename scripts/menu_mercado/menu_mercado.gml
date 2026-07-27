@@ -32,7 +32,7 @@ function menu_mercado(planeta = control.null_planeta){
 		for(var a = 0; a < recurso_max; a++){
 			if recursos_comercializables[a]{
 				var precio_compra = precio_recurso(a, planeta)
-				if planeta.recurso[a] >= 1 and nave_select.recurso_total < nave_carga[nave_select.modelo] - 5 * nave_select.armas and draw_text_boton(xpos, ypos, $"|Comprar ${precio_compra}|", 1) and jugador.dinero > precio_compra{
+				if planeta.recurso[a] >= 1 and nave_select.recurso_total < nave_select.bodega and draw_text_boton(xpos, ypos, $"|Comprar ${precio_compra}|", 1) and jugador.dinero > precio_compra{
 					comprar_recurso(a, 1, planeta, nave_select)
 					//Misiones
 					for(var b = 0; b < misiones_on_compra_max; b++){

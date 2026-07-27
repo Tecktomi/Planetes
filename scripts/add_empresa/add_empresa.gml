@@ -1,5 +1,6 @@
 function add_empresa(){
 	with control{
+		var pirata = sqr(sqr(random(1)))
 		var empresa = {
 			index : counter_empresa++,
 			nombre : "",
@@ -20,8 +21,9 @@ function add_empresa(){
 			fabricas : ds_grid_create(planeta_total, recurso_max),
 			relacion_imperio : ds_map_create(),
 			relacion_imperio_motivo : array_create(relacion_motivo_max),
-			pirata : sqr(sqr(random(1))),
-			alive : true
+			pirata : pirata,
+			alive : true,
+			imperio_favorito : (pirata > 0.3) ? array_choose(imperios) : null_imperio
 		}
 		for(var b = 0; b < mision_max; b++)
 			empresa.misiones_index[b] = array_create(0, null_mision)
