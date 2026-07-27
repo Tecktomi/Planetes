@@ -9,10 +9,10 @@ function menu_misiones(planeta = control.null_planeta){
 		draw_set_halign(fa_center)
 		if tutorial = 9
 			draw_text_background(RW2, 60, tutorial_text[tutorial, 0], fa_center)
-		draw_text_pos(room_width / 2, ypos, "Misiones")
+		draw_text_pos(RW2, ypos, "Misiones")
 		ypos += text_y + 30
 		if array_length(planeta.misiones) = 0
-			draw_text(room_width / 2, ypos, "Sin misiones aun")
+			draw_text(RW2, ypos, "Sin misiones aun")
 		draw_set_halign(fa_left)
 		for(var a = array_length(planeta.misiones) - 1; a >= 0; a--){
 			if jugador.relacion_imperio[? planeta.imperio.index] >= mision_reputacion[planeta.misiones[a]]{
@@ -37,8 +37,8 @@ function menu_misiones(planeta = control.null_planeta){
 			}
 			var b = planeta.misiones[input_data]
 			draw_set_halign(fa_center)
-			draw_text(room_width / 2, 140, $"Tomar mision {mision_nombre[b]}?")
-			draw_text(room_width / 2, 180, mision_descripcion[planeta.arquetipo, b])
+			draw_text(RW2, 140, $"Tomar mision {mision_nombre[b]}?")
+			draw_text(RW2, 180, mision_descripcion[planeta.arquetipo, b])
 			draw_set_halign(fa_right)
 			if draw_text_boton(room_width - 270, room_height - 150, "Cancelar", 2){
 				input_layer = 1
@@ -69,8 +69,8 @@ function menu_misiones(planeta = control.null_planeta){
 			draw_set_color(c_black)
 			draw_rectangle(250, 200, room_width - 250, room_height - 200, true)
 			draw_set_halign(fa_center)
-			draw_text(room_width / 2, 220, $"No se pudo tomar esta misión por ahora\nIntenta más tarde")
-			if mouse_check_button_pressed(mb_left) and (mouse_x < 250 or mouse_y < 200 or mouse_x > room_width - 250 or mouse_y > room_height - 200) or draw_text_boton(room_width / 2, room_height - 250, "Okey", 3){
+			draw_text(RW2, 220, $"No se pudo tomar esta misión por ahora\nIntenta más tarde")
+			if mouse_check_button_pressed(mb_left) and (mouse_x < 250 or mouse_y < 200 or mouse_x > room_width - 250 or mouse_y > room_height - 200) or draw_text_boton(RW2, room_height - 250, "Okey", 3){
 				mouse_clear(mb_left)
 				input_layer = 1
 				show = MENU_MISIONES

@@ -148,10 +148,21 @@ cursor = cr_default
 		"El planeta se encuentra en estado de movilización y los recursos están comprometidos. Dinos qué deseas."
 		]]
 	#endregion
-	#region Filosofía
-	arquetipo_filosofia = [[
-		]]
-	#endregion
+#endregion
+#region Relacion
+	relacion_nombre = array_create(0, "")
+	relacion_valor = array_create(0, 0)
+	function def_motivo(nombre, valor){
+		array_push(relacion_nombre, string(nombre))
+		array_push(relacion_valor, real(valor))
+		return array_length(relacion_nombre) - 1
+	}
+	rel_comercio = def_motivo("Comercio", 1)
+	rel_cumplir = def_motivo("Cumplir misiones", 5)
+	rel_fallar = def_motivo("Fallar misiones", -3)
+	rel_pirateria = def_motivo("Piratería", -5)
+	rel_construir = def_motivo("Construcción", 5)
+	relacion_motivo_max = array_length(relacion_nombre)
 #endregion
 #region Misiones
 	#region arrays
@@ -298,6 +309,7 @@ cursor = cr_default
 		},,
 		function(mision, planeta){
 			if not mision.status and mision.data.destino = planeta{
+				var oficina = jugador.oficina[planeta.index]
 				mision.nombre = string(mision_texto[mision.index, 1], max(0, --mision.data.cantidad), planeta_nombre(mision.data.destino))
 				if mision.data.cantidad <= 0 and oficina.recurso[rec_armas] >= 5{
 					oficina.recurso[rec_armas] -= 5
@@ -308,7 +320,7 @@ cursor = cr_default
 	mis_artefacto = def_mision("Encontrar artefacto", 15, 0, 1, 1,,,
 		function(mision, planeta){
 			if mision.data.destino = planeta{
-				if empresa = jugador{
+				if mision.contratado = jugador{
 					add_noticia("Artefacto encontrado", "Artefacto encontrado")
 					if tutorial = 12
 						tutorial++
@@ -317,7 +329,7 @@ cursor = cr_default
 		}})
 	mis_viaje_express = def_mision("Viaje express", 10, -1, 2, 1,,,
 		function(mision, planeta){
-			if nave.viaje_pos > mision.data.cantidad
+			if mision.data.nave.viaje_pos > mision.data.cantidad
 				mision_fallar(mision, "Tu viaje ha sido demasiado largo")
 			else if planeta = mision.data.destino
 				mision_cumplir(mision)
@@ -327,6 +339,16 @@ cursor = cr_default
 			mision.nombre = string(mision_texto[mision.index, (mision.data.destino = planeta) ? 1 : 0], planeta_nombre(mision.data.destino))
 		})
 	mision_max = array_length(mision_nombre)
+	misiones_on_compra = array_create(0, 0)
+	misiones_on_venta = array_create(0, 0)
+	for(var a = 0; a < mision_max; a++){
+		if not is_undefined(mision_on_compra[a])
+			array_push(misiones_on_compra, a)
+		if not is_undefined(mision_on_venta[a])
+			array_push(misiones_on_venta, a)
+	}
+	misiones_on_compra_max = array_length(misiones_on_compra)
+	misiones_on_venta_max = array_length(misiones_on_venta)
 	arquetipo_mision_frecuencia = [
 		[3, 3, 2, 3, 2, 1, 2, 0, 0, 0, 2, 0, 3, 1, 2],
 		[3, 1, 2, 0, 2, 3, 2, 3, 0, 0, 1, 0, 1, 2, 1],
@@ -352,17 +374,6 @@ cursor = cr_default
 			["Viaja a {0}, una vez ahí, asalta a la primera nave que llegue", "Quédate en {0} y asalta a la primera nave que llegue"]
 		]
 	#endregion
-	misiones_on_viaje = array_create(0, 0)
-	misiones_on_compra = array_create(0, 0)
-	misiones_on_venta = array_create(0, 0)
-	for(var a = 0; a < mision_max; a++){
-		if not is_undefined(mision_on_viaje[a])
-			array_push(misiones_on_viaje, a)
-		if not is_undefined(mision_on_compra[a])
-			array_push(misiones_on_compra, a)
-		if not is_undefined(mision_on_venta[a])
-			array_push(misiones_on_venta, a)
-	}
 	#region tag_mision_multiple
 		tag_mision_multiple = array_create(mision_max, false)
 		tag_mision_multiple[mis_recoger_informacion] = true
@@ -622,18 +633,23 @@ null_empresa = {
 	recurso_venta_precio : array_create(0, 0),
 	recurso_venta_lugar : array_create(0, null_planeta),
 	misiones : undefined,
+	misiones_index : undefined,
 	riesgo : 0,
 	oficina_bool : array_create(0, false),
 	oficina : undefined,
 	ultima_falla : array_create(0, 0),
 	fabricas : ds_grid_create(0, 0),
 	relacion_imperio : ds_map_create(),
-	relacion_imperio_piso : ds_map_create()
+	relacion_imperio_motivo : array_create(relacion_motivo_max)
 }
 ds_map_add(null_empresa.relacion_imperio, 0, 0)
 ds_map_clear(null_empresa.relacion_imperio)
-ds_map_add(null_empresa.relacion_imperio_piso, 0, 0)
-ds_map_clear(null_empresa.relacion_imperio_piso)
+for(var a = 0; a < relacion_motivo_max; a++){
+	var temp_map = ds_map_create()
+	ds_map_add(temp_map, 0, 0)
+	ds_map_clear(temp_map)
+	null_empresa.relacion_imperio_motivo[a] = temp_map
+}
 ds_grid_clear(null_empresa.fabricas, 0)
 null_nave.empresa = null_empresa
 null_planeta.infrastructura_owner = array_create(0, null_empresa)
@@ -655,6 +671,7 @@ null_mision = {
 	nave_asignada : null_nave
 }
 null_empresa.misiones = array_create(0, null_mision)
+null_empresa.misiones_index = array_create(mision_max, array_create(0, null_mision))
 null_nave.misiones = array_create(0, null_mision)
 null_noticia = {
 	fecha : 0,
@@ -677,15 +694,19 @@ null_imperio = {
 	planetas : array_create(0, null_planeta),
 	relacion_imperio : ds_map_create(),
 	relacion_empresa : ds_map_create(),
-	relacion_empresa_piso : ds_map_create(),
+	relacion_empresa_motivo : array_create(relacion_motivo_max),
 	eliminado : false
 }
 ds_map_add(null_imperio.relacion_imperio, 0, 0)
 ds_map_clear(null_imperio.relacion_imperio)
 ds_map_add(null_imperio.relacion_empresa, 0, 0)
 ds_map_clear(null_imperio.relacion_empresa)
-ds_map_add(null_imperio.relacion_empresa_piso, 0, 0)
-ds_map_clear(null_imperio.relacion_empresa_piso)
+for(var a = 0; a < relacion_motivo_max; a++){
+	var temp_map = ds_map_create()
+	ds_map_add(temp_map, 0, 0)
+	ds_map_clear(temp_map)
+	null_imperio.relacion_empresa_motivo[a] = temp_map
+}
 null_planeta.imperio = null_imperio
 imperios = array_create(0, null_imperio)
 //Variables
@@ -856,8 +877,8 @@ repeat(planeta_max){
 		array_push(planetas_terrestres_sin_lunas, planeta)
 		do planeta.radio = random_range(70, 320)
 		until check_orbit(,, planeta.radio)
-		planeta.x = room_width / 2 + (cos(planeta.fase) + EXCENTRICIDAD) * planeta.radio
-		planeta.y = room_height / 2 + sin(planeta.fase) * planeta.radio * 0.9
+		planeta.x = RW2 + (cos(planeta.fase) + EXCENTRICIDAD) * planeta.radio
+		planeta.y = RH2 + sin(planeta.fase) * planeta.radio * 0.9
 		planeta.size = random_range(8, 15)
 		planeta.tipo = weighted_choose([planeta.radio / 70 - 1, 1, 2 - planeta.radio / 320])
 	}
@@ -896,8 +917,8 @@ repeat(4){
 	array_push(planetas_gigantes, planeta)
 	array_push(planetas_terrestres_gigantes, planeta)
 	planeta.radio = 500 + 250 * array_length(planetas_gigantes)
-	planeta.x = room_width / 2 + (cos(planeta.fase) + EXCENTRICIDAD) * planeta.radio
-	planeta.y = room_height / 2 + sin(planeta.fase) * planeta.radio * 0.9
+	planeta.x = RW2 + (cos(planeta.fase) + EXCENTRICIDAD) * planeta.radio
+	planeta.y = RH2 + sin(planeta.fase) * planeta.radio * 0.9
 	planeta.size = random_range(25, 40)
 	planeta.tipo = 3
 	planeta.color = make_color_hsv(random(255), 127, 127)

@@ -1,6 +1,6 @@
 function mision_aceptar(index, planeta = control.null_planeta, empresa = control.jugador, nave = control.nave_select){
 	with control{
-		var mision = add_mision(index, planeta, empresa)
+		var mision = add_mision(real(index), planeta, empresa)
 		//Transportista
 		if index = mis_viajar{
 			var temp_array_planetas = array_create(0, null_planeta), a = weighted_choose(arquetipo_relacion_positiva[planeta.arquetipo])
@@ -137,7 +137,7 @@ function mision_aceptar(index, planeta = control.null_planeta, empresa = control
 			mision.data = {
 				destino : destino,
 				cantidad : cantidad,
-				empresas : array_create(0, null_empresa)
+				empresas : array_create(0, control.null_empresa)
 			}
 			var temp_viaje = calcular_viaje_light(planeta, destino)
 			mision.fecha = dia + 6 * temp_viaje.dis + 500
@@ -325,7 +325,8 @@ function mision_aceptar(index, planeta = control.null_planeta, empresa = control
 			}
 			mision.data = {
 				destino : destino,
-				cantidad : cantidad
+				cantidad : cantidad,
+				nave : nave
 			}
 			mision.nombre = string(mision_texto[index, 0], planeta_nombre(destino), cantidad)
 			mision.fecha = dia + 300 + 8 * cantidad

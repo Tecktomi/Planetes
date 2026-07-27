@@ -4,7 +4,7 @@ function mision_fallar(mision = control.null_mision, motivo = ""){
 		array_disorder_remove(empresa.misiones, mision, 0)
 		array_disorder_remove(mision.nave_asignada.misiones, mision, 1)
 		array_disorder_remove(empresa.misiones_index[mision.index], mision, 2)
-		empresa.relacion_imperio[? planeta.imperio.index] -= mision_penalizacion[index]
+		relacion_add(empresa, planeta.imperio, rel_fallar, mision_penalizacion[index])
 		for(var d = array_length(empresa.misiones) - 1; d >= 0; d--)
 			if empresa.misiones[d].index = mis_fallar and not empresa.misiones[d].status and empresa.misiones[d].data.destino = planeta
 				mision_cumplir(empresa.misiones[d])

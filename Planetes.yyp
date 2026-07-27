@@ -91,6 +91,7 @@
     {"id":{"name":"planeta_nombre","path":"scripts/planeta_nombre/planeta_nombre.yy",},},
     {"id":{"name":"planeta_pos","path":"scripts/planeta_pos/planeta_pos.yy",},},
     {"id":{"name":"precio_recurso","path":"scripts/precio_recurso/precio_recurso.yy",},},
+    {"id":{"name":"relacion_add","path":"scripts/relacion_add/relacion_add.yy",},},
     {"id":{"name":"scr_batalla","path":"scripts/scr_batalla/scr_batalla.yy",},},
     {"id":{"name":"string_struct","path":"scripts/string_struct/string_struct.yy",},},
     {"id":{"name":"text_wrap","path":"scripts/text_wrap/text_wrap.yy",},},

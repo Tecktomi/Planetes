@@ -7,10 +7,10 @@ function menu_noticias(){
 		}
 		var ypos = 100
 		draw_set_halign(fa_center)
-		draw_text_pos(room_width / 2, ypos, "Noticias")
+		draw_text_pos(RW2, ypos, "Noticias")
 		ypos += text_y + 30
 		if array_length(noticias) = 0
-			draw_text(room_width / 2, ypos, "Sin noticias")
+			draw_text(RW2, ypos, "Sin noticias")
 		draw_set_halign(fa_left)
 		if mouse_check_button_pressed(mb_left)
 			show_noticia = -1

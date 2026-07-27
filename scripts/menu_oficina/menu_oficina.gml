@@ -13,7 +13,7 @@ function menu_oficina(planeta = control.null_planeta){
 		}
 		var ypos = 100
 		draw_set_halign(fa_center)
-		draw_text_pos(room_width / 2, ypos, "Oficina")
+		draw_text_pos(RW2, ypos, "Oficina")
 		ypos += text_y + 30
 		draw_set_halign(fa_left)
 		var max_xpos = 0, prev_ypos = ypos, xpos = 0
@@ -84,7 +84,7 @@ function menu_oficina(planeta = control.null_planeta){
 			ypos += text_y
 		}
 		draw_set_halign(fa_center)
-		if draw_text_boton(room_width / 2, room_height - 100, "Fábricas", 1)
+		if draw_text_boton(RW2, room_height - 100, "Fábricas", 1)
 			show = MENU_FABRICAS
 	}
 }

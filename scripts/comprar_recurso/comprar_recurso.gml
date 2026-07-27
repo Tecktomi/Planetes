@@ -4,5 +4,6 @@ function comprar_recurso(recurso, cantidad, planeta = control.null_planeta, nave
 		planeta.recurso[recurso] -= cantidad
 		nave.recurso[recurso] += cantidad
 		nave.recurso_total += cantidad
+		relacion_add(nave.empresa, planeta.imperio, rel_comercio, 0.1)
 	}
 }

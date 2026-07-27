@@ -1,7 +1,7 @@
 function calcular_viaje_light(origen = control.null_planeta, destino = control.null_planeta){
 	var xx = origen.x, yy = origen.y
 	var angle = destino.fase, diff = destino.anno, radio = destino.radio
-	var center_x = room_width / 2, center_y = room_height / 2
+	var center_x = RW2, center_y = RH2
 	var salto = 512
 	//Luna
 	if destino.luna_bool{

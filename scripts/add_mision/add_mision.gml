@@ -1,13 +1,13 @@
-function add_mision(index, planeta = control.null_planeta, empresa = control.null_empresa){
+function add_mision(_index, planeta = control.null_planeta, empresa = control.null_empresa){
 	with control{
 		var mision = {
-			index : real(index),
+			index : real(_index),
 			nombre : "",
 			contratista : planeta,
 			contratado : empresa,
 			fecha : 0,
 			status : false,
-			paga : mision_paga[index],
+			paga : mision_paga[_index],
 			data : {},
 			//0: empresa.misiones, 1: nave.misiones, 2.empresa.mision_index
 			pointer : array_create(3, 0),
@@ -17,7 +17,7 @@ function add_mision(index, planeta = control.null_planeta, empresa = control.nul
 			nave_asignada : null_nave
 		}
 		array_disorder_push(empresa.misiones, mision, 0)
-		array_disorder_push(empresa.misiones_index[index], mision, 2)
+		array_disorder_push(empresa.misiones_index[_index], mision, 2)
 		return mision
 	}
 }

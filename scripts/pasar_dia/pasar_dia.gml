@@ -10,8 +10,8 @@ function pasar_dia(){
 				planeta.y = planeta.luna.y + sin(planeta.fase) * planeta.radio
 			}
 			else{
-				planeta.x = room_width / 2 + (cos(planeta.fase) + EXCENTRICIDAD) * planeta.radio
-				planeta.y = room_height / 2 + sin(planeta.fase) * planeta.radio * 0.9
+				planeta.x = RW2 + (cos(planeta.fase) + EXCENTRICIDAD) * planeta.radio
+				planeta.y = RH2 + sin(planeta.fase) * planeta.radio * 0.9
 			}
 		}
 		for(var a = array_length(naves) - 1; a >= 0; a--){
@@ -64,9 +64,17 @@ function pasar_dia(){
 					empresa.recurso_venta_precio[b] *= empresa.riesgo
 					empresa.recurso_compra_precio[b] /= empresa.riesgo
 				}
+				for(var b = array_length(imperios) - 1; b >= 0; b--){
+					var imperio = imperios[b]
+					empresa.relacion_imperio[? imperio.index] *= 0.9
+					imperio.relacion_empresa[? empresa.index] = empresa.relacion_imperio[? imperio.index]
+					for(var c = 0; c < relacion_motivo_max; c++){
+						empresa.relacion_imperio_motivo[c][? imperio.index] *= 0.9
+						imperio.relacion_empresa_motivo[c][? empresa.index] = empresa.relacion_imperio_motivo[c][? imperio.index]
+					}
+				}
 				for(var b = 0; b < planeta_max; b++){
 					var planeta = planetas_no_gigantes[b], imperio = planeta.imperio
-					empresa.relacion_imperio[? imperio.index] = (empresa.relacion_imperio[? imperio.index] * 9 + empresa.relacion_imperio_piso[? imperio.index]) / 10
 					if empresa.relacion_imperio[? imperio.index] < -(4 - in(planeta.estado, 2, 3, 6, 7)) and empresa.oficina_bool[b]{
 						empresa.oficina_bool[b] = false
 						var oficina = empresa.oficina[b]

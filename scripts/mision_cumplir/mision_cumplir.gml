@@ -11,10 +11,10 @@ function mision_cumplir(mision = control.null_mision){
 		for(var d = array_length(empresa.misiones) - 1; d >= 0; d--)
 			if empresa.misiones[d].index = mis_fallar and not empresa.misiones[d].status and empresa.misiones[d].data.destino = planeta
 				mision_fallar(empresa.mision, "Se supone que debías fallar, no tener éxito")
-		empresa.relacion_imperio[? planeta.imperio.index] += mision_recompensa[index]
+		relacion_add(empresa, planeta.imperio, rel_cumplir, mision_recompensa[index])
 		//Efectos de las misiones
 		if in(index, mis_desabastecer, mis_saturar_mercado, mis_espiar_planeta, mis_armas)
-			empresa.relacion_imperio[? planeta.imperio.index]--
+			relacion_add(empresa, planeta.imperio, rel_fallar, 1)
 		if index = mis_armas and in(mision.data.destino.estado, TENSION, PROTESTAS, DICTADURA) and irandom(1)
 			mision.data.destino.estado = GUERRA
 		if index = mis_desabastecer and in(mision.data.destino.estado, BURBUJA, DICTADURA) and irandom(1){

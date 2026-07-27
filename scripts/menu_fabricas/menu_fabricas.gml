@@ -13,8 +13,8 @@ function menu_fabricas(planeta = control.null_planeta){
 		}
 		var ypos = 100
 		draw_set_halign(fa_center)
-		draw_text_pos(room_width / 2, ypos, "Edificios")
-		var max_capacidad = planeta.capacidad[0] + planeta.capacidad[1] + planeta.capacidad[2], xpos = room_width / 2 - 10 * max_capacidad
+		draw_text_pos(RW2, ypos, "Edificios")
+		var max_capacidad = planeta.capacidad[0] + planeta.capacidad[1] + planeta.capacidad[2], xpos = RW2 - 10 * max_capacidad
 		for(var a = 0; a < 3; a++)
 			repeat(planeta.capacidad[a]){
 				draw_sprite(spr_capacidad, a, xpos, ypos + 20)
@@ -60,7 +60,7 @@ function menu_fabricas(planeta = control.null_planeta){
 				}) and comprable{
 					ds_grid_add(jugador.fabricas, planeta.index, a, 1)
 					jugador.dinero -= recurso_fabrica_precio[a]
-					jugador.relacion_imperio_piso[? planeta.imperio.index] += (arquetipo_recurso_frecuencia[planeta.arquetipo, a] - 3) / 2
+					relacion_add(jugador, planeta.imperio, rel_construir, arquetipo_recurso_frecuencia[planeta.arquetipo, a] - 3)
 					for(var b = 0; b < 3; b++)
 						planeta.capacidad[b] -= recurso_fabrica_capacidad[a, b]
 				}
@@ -102,7 +102,7 @@ function menu_fabricas(planeta = control.null_planeta){
 				}, {
 					comprable : comprable
 				}) and comprable and not planeta.infrastructura_bool[a]{
-					jugador.relacion_imperio_piso[? planeta.imperio.index] += 0.2
+					relacion_add(jugador, planeta.imperio, rel_construir, 1)
 					jugador.dinero -= infrastructura_precio[a]
 					planeta.infrastructura_bool[a] = true
 					planeta.infrastructura_owner[a] = jugador
