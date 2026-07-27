@@ -19,7 +19,9 @@ function add_empresa(){
 			ultima_falla : array_create(mision_max, -infinity),
 			fabricas : ds_grid_create(planeta_total, recurso_max),
 			relacion_imperio : ds_map_create(),
-			relacion_imperio_motivo : array_create(relacion_motivo_max)
+			relacion_imperio_motivo : array_create(relacion_motivo_max),
+			pirata : sqr(sqr(random(1))),
+			alive : true
 		}
 		for(var b = 0; b < mision_max; b++)
 			empresa.misiones_index[b] = array_create(0, null_mision)

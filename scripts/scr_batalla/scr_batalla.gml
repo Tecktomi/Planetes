@@ -1,6 +1,12 @@
 function scr_batalla(){
 	with control{
-		var jugx = batalla_naves[0].x, jugy = batalla_naves[0].y
+		var _jugador
+		for(var b = array_length(control.batalla_naves) - 1; b >= 0; b--)
+			if not control.batalla_naves[b].ia{
+				_jugador = control.batalla_naves[b]
+				break
+			}
+		var jugx = _jugador.x, jugy = _jugador.y
 		if jugx - batalla_sidex < batalla_camx
 			batalla_camx = jugx - batalla_sidex
 		if jugy - batalla_sidey < batalla_camy
@@ -61,7 +67,7 @@ function scr_batalla(){
 				y -= vel * sin(degtorad(dir))
 				var xx = x - control.batalla_camx, yy = y - control.batalla_camy
 				if xx < 0 or yy < 0 or xx > room_width or yy > room_height{
-					var _jugx = control.batalla_naves[0].x - control.batalla_camx, _jugy = control.batalla_naves[0].y - control.batalla_camy
+					var _jugx = _jugador.x - control.batalla_camx, _jugy = _jugador.y - control.batalla_camy
 					var _angle = degtorad(point_direction(xx, yy, _jugx, _jugy)), cosa = cos(_angle), sina = sin(_angle)
 					draw_line(_jugx - 10 * cosa, _jugy + 10 * sina, _jugx - 30 * cosa, _jugy + 30 * sina)
 				}
@@ -179,7 +185,7 @@ function scr_batalla(){
 			for(var a = array_length(batalla_naves) - 1; a >= 0; a--)
 				with batalla_naves[a]{
 					if ia{
-						var target = control.batalla_naves[0]
+						var target = _jugador
 						var _dis = distance_sqr(x, y, target.x, target.y)
 						diff = angle_difference(point_direction(x, y, target.x, target.y), dir)
 						if --step <= 0 and abs(diff) < 1 and _dis < batalla_dis_bala{
@@ -225,8 +231,9 @@ function scr_batalla(){
 					continue
 				_batalla_nave.nave.hp = _batalla_nave.hp
 			}
+			array_disorder_remove(naves_piratas, batalla_pirata, 2)
+			batalla_pirata.pirata_step = 0
 			delete_nave(batalla_loser.nave)
-			batalla = false
 			batalla_planeta = null_planeta
 		}
 	}

@@ -1,6 +1,6 @@
-function array_disorder_remove(arreglo, elemento, index){
-	var len = array_length(arreglo), ultimo_elemento = arreglo[len - 1], pos = elemento.pointer[index]
-	ultimo_elemento.pointer[index] = pos
-	arreglo[pos] = ultimo_elemento
-	array_pop(arreglo)
+function array_disorder_remove(array, struct, index){
+	var len = array_length(array), temp_struct = array[len - 1], point = struct.pointer[index]
+	temp_struct.pointer[index] = point
+	array[point] = temp_struct
+	array_pop(array)
 }

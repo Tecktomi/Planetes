@@ -21,6 +21,12 @@ function nave_llegar_planeta(nave = control.null_nave){
 			}
 		}
 		nave.viaje_pos = 0
+		for(var a = array_length(naves_piratas) - 1; a >= 0; a--){
+			var pirata = naves_piratas[a]
+			if pirata.empresa != empresa and pirata.origen = planeta
+				if batalla_start(planeta, pirata, nave)
+					return true
+		}
 		if empresa = jugador{
 			pasar_dia_bool = false
 			last_path_index = (++last_path_index) mod 5
@@ -40,9 +46,6 @@ function nave_llegar_planeta(nave = control.null_nave){
 		}
 		//Empresas al llegar a un planeta
 		else{
-			//Entrar en batalla
-			if batalla and nave_select_bool and not nave_select.viaje_bool and nave.destino = nave_select.origen
-				batalla_start(nave.destino, nave, jugador)
 			var mision = (array_length(nave.misiones) = 0 ? null_mision : nave.misiones[0]), mision_index = mision.index
 			var flag_saturar_2 = (mision_index = mis_saturar_mercado and mision.data.destino = planeta)
 			var flag_comida_2 = (mision_index = mis_comida and array_contains(mision.data.destinos, planeta))
@@ -121,7 +124,12 @@ function nave_llegar_planeta(nave = control.null_nave){
 				if tag_mision_ia[b] and temp_reputacion >= mision_reputacion[b] and dia - empresa.ultima_falla[b] > 1500
 					mision_aceptar(b, planeta, empresa, nave)
 			}
-			nave_npc_viajar(nave, planeta)
+			if random(1) > empresa.pirata{
+				nave.pirata_step = irandom_range(1, 300)
+				array_disorder_push(naves_piratas, nave, 2)
+			}
+			else
+				nave_npc_viajar(nave, planeta)
 		}
 		//Misiones de espionaje
 		for(var c = array_length(empresas) - 1; c >= 0; c--){
@@ -135,5 +143,6 @@ function nave_llegar_planeta(nave = control.null_nave){
 				mision_on_especial[mis_espiar_planeta](mision, planeta, empresa, nave)
 			}
 		}
+		return false
 	}
 }

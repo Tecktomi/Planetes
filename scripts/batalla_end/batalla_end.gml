@@ -10,16 +10,17 @@ function batalla_end(nave = control.null_nave){
 			if batalla_nave.nave != batalla_loser
 				empresa_winner = batalla_nave.nave.empresa
 		}
-		relacion_add(batalla_pirata, batalla_planeta.imperio, rel_pirateria, arquetipo_pirateria[batalla_planeta.arquetipo])
-		if batalla_pirata = empresa_winner
-			for(var a = array_length(batalla_pirata.misiones_index[mis_pirateria]) - 1; a >= 0; a--){
-				var mision = batalla_pirata.misiones_index[mis_pirateria, a]
+		var pirata_empresa = batalla_pirata.empresa
+		relacion_add(pirata_empresa, batalla_planeta.imperio, rel_pirateria, arquetipo_pirateria[batalla_planeta.arquetipo])
+		if pirata_empresa = empresa_winner
+			for(var a = array_length(pirata_empresa.misiones_index[mis_pirateria]) - 1; a >= 0; a--){
+				var mision = pirata_empresa.misiones_index[mis_pirateria, a]
 				if not mision.status and mision.data.destino = batalla_planeta
 					mision_cumplir(mision)
 			}
-		if batalla_pirata = batalla_loser.nave.empresa
-			for(var a = array_length(batalla_pirata.misiones_index[mis_pirateria]) - 1; a >= 0; a--){
-				var mision = batalla_pirata.misiones_index[mis_pirateria, a]
+		if pirata_empresa = batalla_loser.nave.empresa
+			for(var a = array_length(pirata_empresa.misiones_index[mis_pirateria]) - 1; a >= 0; a--){
+				var mision = pirata_empresa.misiones_index[mis_pirateria, a]
 				if not mision.status and mision.data.destino = batalla_planeta
 					mision_fallar(mision, "Te han destruido a ti")
 			}

@@ -95,6 +95,7 @@
     {"id":{"name":"scr_batalla","path":"scripts/scr_batalla/scr_batalla.yy",},},
     {"id":{"name":"string_struct","path":"scripts/string_struct/string_struct.yy",},},
     {"id":{"name":"text_wrap","path":"scripts/text_wrap/text_wrap.yy",},},
+    {"id":{"name":"weighted_array_choose","path":"scripts/weighted_array_choose/weighted_array_choose.yy",},},
     {"id":{"name":"weighted_choose","path":"scripts/weighted_choose/weighted_choose.yy",},},
     {"id":{"name":"spr_asteroides","path":"sprites/spr_asteroides/spr_asteroides.yy",},},
     {"id":{"name":"spr_capacidad","path":"sprites/spr_capacidad/spr_capacidad.yy",},},

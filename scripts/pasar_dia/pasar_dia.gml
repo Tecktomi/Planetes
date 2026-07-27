@@ -16,12 +16,20 @@ function pasar_dia(){
 		}
 		for(var a = array_length(naves) - 1; a >= 0; a--){
 			var nave = naves[a], empresa = nave.empresa
+			//Pirateando
+			if nave.pirata_step > 0{
+				if --nave.pirata_step <= 0{
+					array_disorder_remove(naves_piratas, nave, 2)
+					nave_npc_viajar(nave, nave.origen)
+				}
+			}
 			//Viajando
-			if nave.viaje_bool{
+			else if nave.viaje_bool{
 				var temp_viaje = nave.viaje
 				//Llega a destino
 				if ++nave.viaje_pos >= temp_viaje.dis
-					nave_llegar_planeta(nave)
+					if nave_llegar_planeta(nave)
+						continue
 			}
 			else{
 				for(var b = array_length(empresa.misiones_index[mis_espiar_planeta]) - 1; b >= 0; b--){
@@ -42,18 +50,19 @@ function pasar_dia(){
 		}
 		for(var a = array_length(empresas) - 1; a >= 0; a--){
 			var empresa = empresas[a]
-			for(var b = array_length(empresa.misiones_index[mis_salvar_fauna]) - 1; b >= 0; b--){
-				var mision = empresa.misiones_index[mis_salvar_fauna, b]
+			for(var b = array_length(empresa.misiones) - 1; b >= 0; b--){
+				var mision = empresa.misiones[b]
 				if dia >= mision.fecha
 					mision_fallar(mision, "Se te ha acabado el plazo")
-				for(var c = array_length(planetas_no_gigantes) - 1; c >= 0; c--)
-					if empresa.oficina_bool[c] and empresa.oficina[c].recurso[rec_fauna] >= 5{
-						mision.fecha++
-						mision.nombre = string(mision_texto[mision.index, 1], --mision.data.cantidad)
-						if mision.data.cantidad <= 0
-							mision_cumplir(mision)
-						break
-					}
+				if mision.index = mis_salvar_fauna
+					for(var c = array_length(planetas_no_gigantes) - 1; c >= 0; c--)
+						if empresa.oficina_bool[c] and empresa.oficina[c].recurso[rec_fauna] >= 5{
+							mision.fecha++
+							mision.nombre = string(mision_texto[mision.index, 1], --mision.data.cantidad)
+							if mision.data.cantidad <= 0
+								mision_cumplir(mision)
+							break
+						}
 			}
 		}
 		//Eventos anuales

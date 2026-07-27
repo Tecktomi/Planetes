@@ -1,7 +1,10 @@
 function delete_empresa(empresa = control.null_empresa){
 	with control{
+		if not empresa.alive
+			exit
+		empresa.alive = false
 		if empresa = jugador{
-			show_message("HAS perdido")
+			show_message("Has perdido")
 			game_end()
 		}
 		else

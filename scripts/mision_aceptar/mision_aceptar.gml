@@ -3,15 +3,18 @@ function mision_aceptar(index, planeta = control.null_planeta, empresa = control
 		var mision = add_mision(real(index), planeta, empresa)
 		//Transportista
 		if index = mis_viajar{
-			var temp_array_planetas = array_create(0, null_planeta), a = weighted_choose(arquetipo_relacion_positiva[planeta.arquetipo])
+			var temp_array_planetas = array_create(0, null_planeta), a = weighted_choose(arquetipo_relacion_positiva[planeta.arquetipo]), temp_array_planetas_weight = array_create(0, 0)
 			for(var c = 0; c < array_length(planetas_arquetipo[a]); c++)
-				if planetas_arquetipo[a, c] != planeta
-					array_push(temp_array_planetas, planetas_arquetipo[a, c])
+				if planetas_arquetipo[a, c] != planeta{
+					var temp_planeta = planetas_arquetipo[a, c]
+					array_push(temp_array_planetas, temp_planeta)
+					array_push(temp_array_planetas_weight, (temp_planeta.luna = planeta.luna) ? 2 : 1)
+				}
 			if array_length(temp_array_planetas) = 0{
 				array_disorder_remove(empresa.misiones, mision, 0)
 				return undefined
 			}
-			var destino = array_choose(temp_array_planetas)
+			var destino = weighted_array_choose(temp_array_planetas, temp_array_planetas_weight)
 			mision.data = {
 				destino : destino,
 				process : 0
