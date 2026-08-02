@@ -141,7 +141,7 @@ if draw_sprite_boton(spr_icon, gui_draw_relacion ? 5 : 6, 40, room_height - 36, 
 if draw_sprite_boton(spr_icon, (nave_select.pirata_step > 0) ? 7 : 8, 76, room_height - 36, 2, 2) or keyboard_check_pressed(ord("G")){
 	if nave_select.pirata_step = 0{
 		nave_select.pirata_step = 1
-		array_disorder_push(nave_select, naves_piratas, 2)
+		array_disorder_push(naves_piratas, nave_select, 2)
 	}
 	else{
 		nave_select.pirata_step = 0

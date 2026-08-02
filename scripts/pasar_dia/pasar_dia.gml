@@ -17,7 +17,7 @@ function pasar_dia(){
 		for(var a = array_length(naves) - 1; a >= 0; a--){
 			var nave = naves[a], empresa = nave.empresa
 			//Pirateando
-			if nave.pirata_step > 0{
+			if nave.pirata_step > 0 and empresa != jugador{
 				if --nave.pirata_step <= 0{
 					array_disorder_remove(naves_piratas, nave, 2)
 					nave_npc_viajar(nave, nave.origen)
