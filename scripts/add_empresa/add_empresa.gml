@@ -2,7 +2,7 @@ function add_empresa(){
 	with control{
 		var pirata = sqr(sqr(random(1)))
 		var empresa = {
-			index : counter_empresa++,
+			index : ++counter_empresa,
 			nombre : "",
 			naves : array_create(0, null_nave),
 			//0: empresas
@@ -17,7 +17,7 @@ function add_empresa(){
 			riesgo : random_range(0.95, 1.05),
 			oficina_bool : array_create(planeta_total, false),
 			oficina : array_create(planeta_total, null_oficina),
-			ultima_falla : array_create(mision_max, -infinity),
+			ultima_falla : array_create(mision_max, 0),
 			fabricas : ds_grid_create(planeta_total, recurso_max),
 			relacion_imperio : ds_map_create(),
 			relacion_imperio_motivo : array_create(relacion_motivo_max),

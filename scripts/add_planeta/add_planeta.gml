@@ -1,7 +1,7 @@
 function add_planeta(gigante = false){
 	with control{
 		var planeta = {
-			index : counter_planeta++,
+			index : ++counter_planeta,
 			x : 0,
 			y : 0,
 			radio : 0,
@@ -22,11 +22,12 @@ function add_planeta(gigante = false){
 			estado_repeat : 0,
 			infrastructura : 4,
 			fabricas : 4,
-			infrastructura_bool : array_create(array_length(infrastructura_nombre), false),
-			infrastructura_owner : array_create(array_length(infrastructura_nombre), null_empresa),
+			infrastructura_bool : array_create(infrastructura_max, false),
+			infrastructura_owner : array_create(infrastructura_max, null_empresa),
 			capacidad: [3, 3, 3],
 			gigante : gigante,
 			luna_externa : false,
+			imperio : null_imperio,
 			tipo : 0
 		}
 		array_push(planetas, planeta)

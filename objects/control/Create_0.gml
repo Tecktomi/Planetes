@@ -1,6 +1,7 @@
 randomize()
 draw_set_font(ft_letra)
 cursor = cr_default
+#macro VERSION 2026_08_05
 //Definiciones
 #region Macros
 	#macro DIS_PLANET_NAME 10_000
@@ -10,6 +11,7 @@ cursor = cr_default
 	#macro IA_INTENTOS_VIAJES 10
 	#macro RW2 room_width / 2
 	#macro RH2 room_height / 2
+	#macro ultima_falla_time 1500
 #endregion
 #region Estados
 	estado_nombre = ["Estable", "Tensión", "Guerra", "Escasez", "Crecimiento", "Burbuja", "Protestas", "Dictadura", "Reformas"]
@@ -171,26 +173,33 @@ cursor = cr_default
 		mision_reputacion = array_create(0, 0)
 		mision_penalizacion = array_create(0, 0)
 		mision_recompensa = array_create(0, 0)
-		mision_on_compra = array_create(0, function(){})
-		mision_on_venta = array_create(0, function(){})
-		mision_on_viaje = array_create(0, function(){})
-		mision_on_especial = array_create(0, function(){})
+		var null_mision_data_func = function(data, buffer){}
+		mision_data_func = array_create(0, null_mision_data_func)
+		mision_on_compra = array_create(0, undefined)
+		mision_on_venta = array_create(0, undefined)
+		mision_on_viaje = array_create(0, undefined)
+		mision_on_especial = array_create(0, undefined)
 		temp_arquetipo_mision_frecuencia = array_create(0, array_create(0, 0))
 	#endregion
-	function def_mision(nombre, paga = 0, rep_min = 0, rep_fallo = 0, rep_exito = 0, frecuencia = array_create(arquetipo_max, 0), on_compra = undefined, on_venta = undefined, on_viaje = undefined, on_especial = undefined){
+	function def_mision(nombre, paga = 0, rep_min = 0, rep_fallo = 0, rep_exito = 0, frecuencia = array_create(arquetipo_max, 0), data_func = null_mision_data_func, on_compra = undefined, on_venta = undefined, on_viaje = undefined, on_especial = undefined){
 		array_push(mision_nombre, string(nombre))
 		array_push(mision_paga, paga)
 		array_push(mision_reputacion, rep_min)
 		array_push(mision_penalizacion, rep_fallo)
 		array_push(mision_recompensa, rep_exito)
 		array_push(temp_arquetipo_mision_frecuencia, frecuencia)
+		array_push(mision_data_func, data_func)
 		array_push(mision_on_compra, on_compra)
 		array_push(mision_on_venta, on_venta)
 		array_push(mision_on_viaje, on_viaje)
 		array_push(mision_on_especial, on_especial)
 		return array_length(mision_nombre) - 1
 	}
-	mis_viajar = def_mision("Viajar", 5, -1, 1, 0.5, [3, 3, 2, 4, 2],,
+	mis_viajar = def_mision("Viajar", 5, -1, 1, 0.5, [3, 3, 2, 4, 2],
+		function(data, buffer){
+			buffer_write(buffer, buffer_u8, real(data.destino.index))
+			buffer_write(buffer, buffer_u8, real(data.process))
+		},,,
 		function(mision, planeta){//on_viaje
 			if mision.data.destino = planeta{
 				if mision.data.process++ = 0{
@@ -212,12 +221,22 @@ cursor = cr_default
 					mision_cumplir(mision)
 		}})
 	mis_desabastecer = def_mision("Desabastecer", 20, 0, 1, 1, [3, 1, 2, 2, 3],
-		function(mision, planeta, recurso){
+		function(data, buffer){
+			buffer_write(buffer, buffer_u8, real(data.destino.index))
+			buffer_write(buffer, buffer_u8, real(data.recurso))
+		},
+		function(mision, planeta, recurso){//on_compra
 			if not mision.status and mision.data.destino = planeta and mision.data.recurso = recurso and floor(planeta.recurso[recurso]) = 0
 				mision_cumplir(mision)
 		})
-	mis_recoger_informacion = def_mision("Recoger información", 15, -1, 1, 1, [2, 2, 2, 2, 2],,,
-		function(mision, planeta){
+	mis_recoger_informacion = def_mision("Recoger información", 15, -1, 1, 1, [2, 2, 2, 2, 2],
+		function(data, buffer){
+			var len = array_length(data.destinos)
+			buffer_write(buffer, buffer_u8, len)
+			for(var a = 0; a < len; a++)
+				buffer_write(buffer, buffer_u8, real(data.destinos[a].index))
+		},,,
+		function(mision, planeta){//on_viaje
 			if array_contains(mision.data.destinos, planeta){
 				array_remove(mision.data.destinos, planeta)
 				var len = array_length(mision.data.destinos)
@@ -228,21 +247,38 @@ cursor = cr_default
 				else
 					mision_cumplir(mision)
 		}})
-	mis_saturar_mercado = def_mision("Saturar mercado", 10, 0, 3, 2, [3, 0, 0, 0, 0],,
-		function(mision, planeta, recurso){
+	mis_saturar_mercado = def_mision("Saturar mercado", 10, 0, 3, 2, [3, 0, 0, 0, 0],
+		function(data, buffer){
+			buffer_write(buffer, buffer_u8, real(data.destino.index))
+			buffer_write(buffer, buffer_u8, real(data.recurso))
+			buffer_write(buffer, buffer_f64, real(data.precio))
+		},,
+		function(mision, planeta, recurso){//on_venta
 			if not mision.status and mision.data.destino = planeta and mision.data.recurso = recurso and precio_recurso(recurso, planeta, false) <= mision.data.precio
 				mision_cumplir(mision)
 		})
 	mis_llenar_bodega = def_mision("Llenar bodega", 15, 0, 1, 0.5, [2, 2, 3, 1, 1],
-		function(mision, planeta, recurso){
+		function(data, buffer){
+			buffer_write(buffer, buffer_u8, real(data.recurso))
+			buffer_write(buffer, buffer_u8, real(data.cantidad))
+		},
+		function(mision, planeta, recurso){//on_compra
 			if not mision.status and mision.data.recurso = recurso and nave_select.recurso[recurso] >= mision.data.cantidad
 				mision_cumplir(mision)
 		})
-	mis_espiar_empresas = def_mision("Espiar empresas", 10, 1, 1, 1.5, [1, 3, 2, 2, 2],,,
-		function(mision, planeta){
+	mis_espiar_empresas = def_mision("Espiar empresas", 10, 1, 1, 1.5, [1, 3, 2, 2, 2],
+		function(data, buffer){
+			buffer_write(buffer, buffer_u8, real(data.destino.index))
+			buffer_write(buffer, buffer_u8, real(data.cantidad))
+			var len = array_length(data.empresas)
+			buffer_write(buffer, buffer_u8, len)
+			for(var a = 0; a < len; a++)
+				buffer_write(buffer, buffer_u8, data.empresas[a].pointer[0])
+		},,,
+		function(mision, planeta){//on_viaje
 			mision.nombre = string(mision_texto[mision.index, (mision.data.destino = planeta) ? 1 : 0], planeta_nombre(mision.data.destino), mision.data.cantidad)
 		},
-		function(mision, planeta, empresa, nave){
+		function(mision, planeta, empresa, nave){//on_especial
 			if not mision.status and mision.nave_asignada.origen = planeta and not mision.nave_asignada.viaje_bool and nave.empresa != empresa and mision.data.destino = planeta{
 				if not array_contains(mision.data.empresas, nave.empresa)
 					array_push(mision.data.empresas, nave.empresa)
@@ -256,8 +292,12 @@ cursor = cr_default
 				}
 			}
 		})
-	mis_espiar_planeta = def_mision("Investigar encubierto", 20, 1, 2, 2, [2, 2, 1, 3, 3],,,,
-		function(mision, planeta, empresa, nave){
+	mis_espiar_planeta = def_mision("Investigar encubierto", 20, 1, 2, 2, [2, 2, 1, 3, 3],
+		function(data, buffer){
+			buffer_write(buffer, buffer_u8, real(data.destino.index))
+			buffer_write(buffer, buffer_u16, real(data.cantidad))
+		},,,,
+		function(mision, planeta, empresa, nave){//on_especial
 			if not mision.status and mision.nave_asignada.origen = planeta and not mision.nave_asignada.viaje_bool and nave.empresa != empresa and mision.data.destino = planeta{
 				if empresa = jugador{
 					mision_fallar(mision, "Alguien te ha visto")
@@ -271,7 +311,13 @@ cursor = cr_default
 			}
 		})
 	mis_electronicos = def_mision("Conseguir electrónicos", 25, 0, 3, 2, [0, 3, 0, 0, 0],
-		function(mision, planeta, recurso){
+		function(data, buffer){
+			var len = array_length(data.destinos)
+			buffer_write(buffer, buffer_u8, len)
+			for(var a = 0; a < len; a++)
+				buffer_write(buffer, buffer_u8, real(data.destinos[a].index))
+		},
+		function(mision, planeta, recurso){//on_compra
 			if not mision.status and recurso = rec_electronicos and array_contains(mision.data.destinos, planeta){
 				array_remove(mision.data.destinos, planeta)
 				var len = array_length(mision.data.destinos)
@@ -283,13 +329,22 @@ cursor = cr_default
 					mision_cumplir(mision)
 			}
 		})
-	mis_salvar_fauna = def_mision("Salvar fauna salvaje", 10, 0, 3, 2, [0, 0, 3, 0, 0],,
-		function(mision, planeta, recurso){
+	mis_salvar_fauna = def_mision("Salvar fauna salvaje", 10, 0, 3, 2, [0, 0, 3, 0, 0],
+		function(data, buffer){
+			buffer_write(buffer, buffer_u16, real(data.cantidad))
+		},,
+		function(mision, planeta, recurso){//on_venta
 			if not mision.status and recurso = rec_fauna
 				mision_fallar(mision, "Has vendido los animales en el mercado local")
 		})
-	mis_comida = def_mision("Entregar comida", 15, 0, 3, 2, [0, 0, 0, 3, 0],,
-		function(mision, planeta, recurso){
+	mis_comida = def_mision("Entregar comida", 15, 0, 3, 2, [0, 0, 0, 3, 0],
+		function(data, buffer){
+			var len = array_length(data.destinos)
+			buffer_write(buffer, buffer_u8, len)
+			for(var a = 0; a < len; a++)
+				buffer_write(buffer, buffer_u8, real(data.destinos[a].index))
+		},,
+		function(mision, planeta, recurso){//on_venta
 			if not mision.status and recurso = rec_comida and array_contains(mision.data.destinos, planeta) and planeta.recurso[rec_comida] >= 4{
 				if planeta.estado = ESCASEZ and irandom(1)
 					planeta.estado = ESTABLE
@@ -303,13 +358,20 @@ cursor = cr_default
 					mision_cumplir(mision)
 			}
 		})
-	mis_fallar = def_mision("Fallar misión", 20, 1, 1, 2, [2, 1, 1, 0, 2])
-	mis_armas = def_mision("Economía de guerra", 20, 0, 3, 2, [0, 0, 0, 0, 3],,
-		function(mision, planeta, recurso){
+	mis_fallar = def_mision("Fallar misión", 20, 1, 1, 2, [2, 1, 1, 0, 2],
+		function(data, buffer){
+			buffer_write(buffer, buffer_u8, real(data.destino.index))
+		})
+	mis_armas = def_mision("Economía de guerra", 20, 0, 3, 2, [0, 0, 0, 0, 3],
+		function(data, buffer){
+			buffer_write(buffer, buffer_u8, real(data.destino.index))
+			buffer_write(buffer, buffer_u8, real(data.cantidad))
+		},,
+		function(mision, planeta, recurso){//on_venta
 			if not mision.status and recurso = rec_armas
 				mision_fallar(mision, "Has vendido las armas en el mercado local")
 		},,
-		function(mision, planeta){
+		function(mision, planeta){//on_especial
 			if not mision.status and mision.data.destino = planeta{
 				var oficina = jugador.oficina[planeta.index]
 				mision.nombre = string(mision_texto[mision.index, 1], max(0, --mision.data.cantidad), planeta_nombre(mision.data.destino))
@@ -319,8 +381,11 @@ cursor = cr_default
 				}
 			}
 		})
-	mis_artefacto = def_mision("Encontrar artefacto", 15, 0, 1, 1, [3, 1, 2, 2, 2],,,
-		function(mision, planeta){
+	mis_artefacto = def_mision("Encontrar artefacto", 15, 0, 1, 1, [3, 1, 2, 2, 2],
+		function(data, buffer){
+			buffer_write(buffer, buffer_u8, real(data.destino.index))
+		},,,
+		function(mision, planeta){//on_viaje
 			if mision.data.destino = planeta{
 				if mision.contratado = jugador{
 					add_noticia("Artefacto encontrado", "Artefacto encontrado")
@@ -329,15 +394,23 @@ cursor = cr_default
 				}
 				mision_cumplir(mision)
 		}})
-	mis_viaje_express = def_mision("Viaje express", 10, -1, 2, 1, [1, 2, 3, 2, 1],,,
-		function(mision, planeta){
+	mis_viaje_express = def_mision("Viaje express", 10, -1, 2, 1, [1, 2, 3, 2, 1],
+		function(data, buffer){
+			buffer_write(buffer, buffer_u8, real(data.destino.index))
+			buffer_write(buffer, buffer_u8, real(data.cantidad))
+			buffer_write(buffer, buffer_u16, real(data.nave.pointer[0]))
+		},,,
+		function(mision, planeta){//on_viaje
 			if mision.data.nave.viaje_pos > mision.data.cantidad
 				mision_fallar(mision, "Tu viaje ha sido demasiado largo")
 			else if planeta = mision.data.destino
 				mision_cumplir(mision)
 		})
-	mis_pirateria = def_mision("Piratería", 20, 4, 2, 2, [2, 1, 1, 0, 3],,,
-		function(mision, planeta){
+	mis_pirateria = def_mision("Piratería", 20, 4, 2, 2, [2, 1, 1, 0, 3],
+		function(data, buffer){
+			buffer_write(buffer, buffer_u8, real(data.destino.index))
+		},,,
+		function(mision, planeta){//on_viaje
 			mision.nombre = string(mision_texto[mision.index, (mision.data.destino = planeta) ? 1 : 0], planeta_nombre(mision.data.destino))
 		})
 	mision_max = array_length(mision_nombre)
@@ -577,48 +650,47 @@ null_viaje = {
 	origen_y : 0
 }
 null_planeta = {
-	index : -1,
+	index : 0,//save
 	x : 0,
 	y : 0,
-	radio : 0,
-	fase : 0,
+	radio : 0,//save
+	fase : 0,//save
 	anno : 0,
-	size : 0,
-	nombre : "",
-	color : c_black,
+	size : 0,//save
+	nombre : "",//save
+	color : c_black,//save
 	luna_bool : false,
-	luna : undefined,
+	luna : undefined,//save
 	lunas : undefined,
-	recurso : array_create(0, 0),
-	recurso_precio : array_create(recurso_max, 0),
-	recurso_fabrica : array_create(recurso_max, 0),
-	misiones : array_create(0, 0),
+	recurso : array_create(recurso_max, 0),//save
+	recurso_precio : array_create(recurso_max, 0),//save
+	recurso_fabrica : array_create(recurso_max, 0),//save
+	misiones : array_create(0, 0),//save
 	arquetipo : 0,
-	estado : 0,
-	estado_repeat : 0,
-	infrastructura : 0,
-	fabricas : 0,
+	estado : 0,//save
+	estado_repeat : 0,//save
+	infrastructura : 0,//save
+	fabricas : 0,//save
 	infrastructura_bool : array_create(0, false),
-	infrastructura_owner : undefined,
-	capacidad : array_create(0, 0),
-	gigante : false,
+	infrastructura_owner : undefined,//save
+	capacidad : array_create(0, 0),//save
+	gigante : false,//save
 	luna_externa : false,
-	imperio : undefined,
+	imperio : undefined,//save
 	tipo : 0
 }
 null_planeta.luna = null_planeta
 null_planeta.lunas = array_create(0, null_planeta)
 planetas = array_create(0, null_planeta)
 null_nave = {
-	index : -1,
-	origen : null_planeta,
-	destino : null_planeta,
-	pointer : array_create(0, 0),
-	empresa : undefined,
-	viaje : null_viaje,
-	viaje_bool : false,
-	viaje_pos : 0,
-	recurso : array_create(0, 0),
+	origen : null_planeta,//save
+	destino : null_planeta,//save
+	pointer : array_create(3, 0),//save
+	empresa : undefined,//save
+	viaje : null_viaje,//save
+	viaje_bool : false,//save
+	viaje_pos : 0,//save
+	recurso : array_create(recurso_max, 0),//save
 	recurso_total : 0,
 	misiones : undefined,
 	modelo : 0,
@@ -631,27 +703,27 @@ null_nave = {
 naves = array_create(0, null_nave)
 naves_piratas = array_create(0, null_nave)
 null_empresa = {
-	index : -1,
-	nombre : "",
+	index : 0,//save
+	nombre : "",//save
 	naves : array_create(0, null_nave),
-	pointer : array_create(0, 0),
-	dinero : 0,
-	recurso_compra_precio : array_create(0, 0),
-	recurso_compra_lugar : array_create(0, null_planeta),
-	recurso_venta_precio : array_create(0, 0),
-	recurso_venta_lugar : array_create(0, null_planeta),
-	misiones : undefined,
+	dinero : 0,//save
+	recurso_compra_precio : array_create(0, 0),//save
+	recurso_compra_lugar : array_create(0, null_planeta),//save
+	recurso_venta_precio : array_create(0, 0),//save
+	recurso_venta_lugar : array_create(0, null_planeta),//save
+	misiones : undefined,//save*
 	misiones_index : undefined,
-	riesgo : 0,
+	riesgo : 0,//save
 	oficina_bool : array_create(0, false),
-	oficina : undefined,
-	ultima_falla : array_create(0, 0),
-	fabricas : ds_grid_create(0, 0),
+	oficina : undefined,//save*
+	ultima_falla : array_create(0, 0),//save
+	fabricas : ds_grid_create(0, 0),//save
 	relacion_imperio : ds_map_create(),
 	relacion_imperio_motivo : array_create(relacion_motivo_max),
-	pirata : 0,
+	pirata : 0,//save
 	alive : false,
-	imperio_favorito : undefined
+	imperio_favorito : undefined,//save
+	pointer : array_create(1, 0)
 }
 ds_map_add(null_empresa.relacion_imperio, 0, 0)
 ds_map_clear(null_empresa.relacion_imperio)
@@ -666,20 +738,20 @@ null_nave.empresa = null_empresa
 null_planeta.infrastructura_owner = array_create(0, null_empresa)
 empresas = array_create(0, null_empresa)
 null_mision = {
-	index : -1,
-	nombre : "",
-	contratista : null_planeta,
+	index : -1,//save
+	nombre : "",//save
+	contratista : null_planeta,//save
 	contratado : null_empresa,
-	fecha : 0,
-	status : false,
-	paga : 0,
-	data : {},
+	fecha : 0,//save
+	status : false,//save
+	paga : 0,//save
+	data : {},//save*
 	//0: empresa.misiones, 1: nave.misiones, 2.empresa.mision_index
-	pointer : array_create(0, 0),
-	restricciones : array_create(0, null_planeta),
+	pointer : array_create(3, 0),//save
+	restricciones : array_create(0, null_planeta),//save
 	restricciones_texto : "",
 	//Para los NPC
-	nave_asignada : null_nave
+	nave_asignada : null_nave//save
 }
 null_empresa.misiones = array_create(0, null_mision)
 null_empresa.misiones_index = array_create(mision_max, array_create(0, null_mision))
@@ -699,14 +771,15 @@ null_oficina = {
 }
 null_empresa.oficina = array_create(0, null_oficina)
 null_imperio = {
-	index : -1,
-	nombre : "",
-	arquetipo : 0,
+	index : 0,//save
+	nombre : "",//save
+	arquetipo : 0,//save
 	planetas : array_create(0, null_planeta),
-	relacion_imperio : ds_map_create(),
+	relacion_imperio : ds_map_create(),//save
 	relacion_empresa : ds_map_create(),
-	relacion_empresa_motivo : array_create(relacion_motivo_max),
-	eliminado : false
+	relacion_empresa_motivo : array_create(relacion_motivo_max),//save
+	eliminado : false,
+	pointer : array_create(1, 0)//save
 }
 ds_map_add(null_imperio.relacion_imperio, 0, 0)
 ds_map_clear(null_imperio.relacion_imperio)
@@ -774,7 +847,6 @@ zoom = 1
 camx = RW2
 camy = RH2
 counter_planeta = 0
-counter_nave = 0
 counter_empresa = 0
 counter_imperio = 0
 #region Batalla
@@ -883,7 +955,7 @@ repeat(planeta_max){
 		planeta.radio = 15 + 20 * array_length(planeta.luna.lunas)
 		planeta.x = planeta.luna.x + cos(planeta.fase) * planeta.radio
 		planeta.y = planeta.luna.y + sin(planeta.fase) * planeta.radio
-		planeta.size = random_range(3, 6)
+		planeta.size = irandom_range(3, 6)
 		planeta.tipo = weighted_choose([planeta.luna.radio / 70 - 1, 1, 2 - planeta.luna.radio / 320])
 	}
 	else{
@@ -894,7 +966,7 @@ repeat(planeta_max){
 		until check_orbit(,, planeta.radio)
 		planeta.x = RW2 + (cos(planeta.fase) + EXCENTRICIDAD) * planeta.radio
 		planeta.y = RH2 + sin(planeta.fase) * planeta.radio * 0.9
-		planeta.size = random_range(8, 15)
+		planeta.size = irandom_range(8, 15)
 		planeta.tipo = weighted_choose([planeta.radio / 70 - 1, 1, 2 - planeta.radio / 320])
 	}
 	planeta.anno = 10 / power(planeta.radio, 1.5)
@@ -934,7 +1006,7 @@ repeat(4){
 	planeta.radio = 500 + 250 * array_length(planetas_gigantes)
 	planeta.x = RW2 + (cos(planeta.fase) + EXCENTRICIDAD) * planeta.radio
 	planeta.y = RH2 + sin(planeta.fase) * planeta.radio * 0.9
-	planeta.size = random_range(25, 40)
+	planeta.size = irandom_range(25, 40)
 	planeta.tipo = 3
 	planeta.color = make_color_hsv(random(255), 127, 127)
 	planeta.anno = 10 / power(planeta.radio, 1.5)
@@ -956,7 +1028,7 @@ repeat(4){
 		luna.radio = 30 + 25 * array_length(planeta.lunas)
 		luna.x = planeta.x + cos(luna.fase) * luna.radio
 		luna.y = planeta.y + sin(luna.fase) * luna.radio
-		luna.size = random_range(3, 6)
+		luna.size = irandom_range(3, 6)
 		luna.tipo = weighted_choose([luna.radio / 750, 1, 1 - luna.radio / 1500])
 		luna.anno = 10 / power(luna.radio, 1.5)
 		b = 0

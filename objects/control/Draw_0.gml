@@ -138,7 +138,7 @@ if draw_sprite_boton(spr_icon, gui_draw_path ? 3 : 4, 4, room_height - 36, 2, 2)
 	gui_draw_path = not gui_draw_path
 if draw_sprite_boton(spr_icon, gui_draw_relacion ? 5 : 6, 40, room_height - 36, 2, 2)
 	gui_draw_relacion = not gui_draw_relacion
-if draw_sprite_boton(spr_icon, (nave_select.pirata_step > 0) ? 7 : 8, 76, room_height - 36, 2, 2) or keyboard_check_pressed(ord("G")){
+if draw_sprite_boton(spr_icon, (nave_select.pirata_step > 0) ? 7 : 8, 76, room_height - 36, 2, 2) or keyboard_check_pressed(ord("P")){
 	if nave_select.pirata_step = 0{
 		nave_select.pirata_step = 1
 		array_disorder_push(naves_piratas, nave_select, 2)
@@ -365,6 +365,8 @@ if keyboard_check_pressed(vk_escape)
 	game_end()
 if keyboard_check_pressed(vk_f4)
 	window_set_fullscreen(not window_get_fullscreen())
+if keyboard_check_pressed(ord("G"))
+	buffer_save(save_game_buffer(), "save.txt")
 if tutorial != -1{
 	if tutorial = 10
 		draw_text_background(RW2, 60, string(tutorial_text[tutorial, (not subsistema_vista)], jugador.misiones[0].data.destino.luna.nombre), fa_center)

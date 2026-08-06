@@ -121,7 +121,7 @@ function nave_llegar_planeta(nave = control.null_nave){
 			if array_length(nave.misiones) = 0 and array_length(planeta.misiones) > 0 and temp_reputacion >= -0.5{
 				input_data = irandom(array_length(planeta.misiones) - 1)
 				var b = planeta.misiones[input_data]
-				if tag_mision_ia[b] and temp_reputacion >= mision_reputacion[b] and dia - empresa.ultima_falla[b] > 1500
+				if tag_mision_ia[b] and temp_reputacion >= mision_reputacion[b] and dia - empresa.ultima_falla[b] >= 0
 					mision_aceptar(b, planeta, empresa, nave)
 			}
 			//Reparar

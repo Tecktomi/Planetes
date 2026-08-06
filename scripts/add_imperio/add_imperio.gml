@@ -1,14 +1,16 @@
 function add_imperio(){
 	with control{
 		var imperio = {
-			index : counter_imperio++,
+			index : ++counter_imperio,
 			nombre : gen_nombre(),
 			arquetipo : 0,
 			planetas : array_create(0, null_planeta),
 			relacion_imperio : ds_map_create(),
 			relacion_empresa : ds_map_create(),
 			relacion_empresa_motivo : array_create(relacion_motivo_max),
-			eliminado : false
+			eliminado : false,
+			//Imperios
+			pointer : array_create(1, 0)
 		}
 		for(var a = array_length(imperios) - 1; a >= 0; a--){
 			var temp_imperio = imperios[a]
@@ -30,7 +32,7 @@ function add_imperio(){
 				ds_map_add(empresa.relacion_imperio_motivo[b], imperio.index, 0)
 			}
 		}
-		array_push(imperios, imperio)
+		array_disorder_push(imperios, imperio, 0)
 		return imperio
 	}
 }

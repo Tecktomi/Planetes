@@ -356,10 +356,6 @@ function mision_aceptar(index, planeta = control.null_planeta, empresa = control
 		}
 		//Restricciones
 		var cantidad = irandom(clamp(ceil(empresa.relacion_imperio[? planeta.imperio.index]), 0, 5))
-		if cantidad = 1
-			mision.restricciones_texto += "\nSin pasar por"
-		else if cantidad > 1
-			mision.restricciones_texto += "\nSin pasar ni por"
 		for(var c = 0; c < cantidad; c++){
 			var destino = null_planeta
 			if tag_mision_multiple[index]{
@@ -415,15 +411,8 @@ function mision_aceptar(index, planeta = control.null_planeta, empresa = control
 				destino = array_choose(temp_array_planetas)
 			}
 			array_push(mision.restricciones, destino)
-			if c = 0
-				mision.restricciones_texto += $" {planeta_nombre(destino)}"
-			else if c < cantidad - 1
-				mision.restricciones_texto += $", {planeta_nombre(destino)}"
-			else
-				mision.restricciones_texto += $" ni {planeta_nombre(destino)}"
-			if c = cantidad - 1
-				mision.restricciones_texto += "  "
 		}
+		mision.restricciones_texto = gen_restriccion_texto(mision.restricciones)
 		mision.paga += cantidad
 		if empresa != jugador
 			mision.fecha += 300

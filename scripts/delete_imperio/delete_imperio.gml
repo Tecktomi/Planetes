@@ -1,6 +1,6 @@
 function delete_imperio(imperio = control.null_imperio){
 	with control{
-		array_remove(imperios, imperio)
+		array_disorder_remove(imperios, imperio, 0)
 		ds_map_destroy(imperio.relacion_imperio)
 		ds_map_destroy(imperio.relacion_empresa)
 		for(var a = array_length(imperios) - 1; a >= 0; a--)

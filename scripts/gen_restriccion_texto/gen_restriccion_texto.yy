@@ -1,12 +1,12 @@
 {
   "$GMScript":"v1",
-  "%Name":"delete_imperio",
+  "%Name":"gen_restriccion_texto",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"delete_imperio",
+  "name":"gen_restriccion_texto",
   "parent":{
-    "name":"ADD",
-    "path":"folders/ADD.yy",
+    "name":"Planetes",
+    "path":"Planetes.yyp",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

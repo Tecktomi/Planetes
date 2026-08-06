@@ -1,7 +1,6 @@
 function add_nave(empresa = control.null_empresa, modelo = 0, armas = 1){
 	with control{
 		var nave = {
-			index : counter_nave++,
 			origen : null_planeta,
 			destino : null_planeta,
 			//0: naves, 1: empresa.naves, 2: naves_pirata

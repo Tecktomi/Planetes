@@ -116,7 +116,7 @@ function pasar_dia(){
 							}
 							empresa.dinero -= empresa.fabricas[# b, c] * recurso_fabrica_mantenimiento[c]
 						}
-						for(var c = array_length(infrastructura_nombre) - 1; c >= 0; c--)
+						for(var c = 0; c < infrastructura_max; c++)
 							if planeta.infrastructura_bool[c] and planeta.infrastructura_owner[c] = empresa
 								empresa.dinero -= infrastructura_mantenimiento[c]
 						if empresa.dinero != temp_dinero

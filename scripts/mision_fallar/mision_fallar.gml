@@ -14,6 +14,6 @@ function mision_fallar(mision = control.null_mision, motivo = ""){
 			misiones_falladas++
 			add_noticia("Has fallado una misión", $"{motivo != "" ? motivo + "\n" : ""}{arquetipo_fallo[planeta.arquetipo]}")
 		}
-		empresa.ultima_falla[index] = dia
+		empresa.ultima_falla[index] = dia + ultima_falla_time
 	}
 }

@@ -1,12 +1,12 @@
 {
   "$GMScript":"v1",
-  "%Name":"delete_imperio",
+  "%Name":"save_game_buffer",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"delete_imperio",
+  "name":"save_game_buffer",
   "parent":{
-    "name":"ADD",
-    "path":"folders/ADD.yy",
+    "name":"Planetes",
+    "path":"Planetes.yyp",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",
