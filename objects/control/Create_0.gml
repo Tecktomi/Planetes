@@ -1,9 +1,9 @@
 randomize()
 draw_set_font(ft_letra)
 cursor = cr_default
-#macro VERSION 2026_08_05
 //Definiciones
 #region Macros
+	#macro VERSION 2026_08_05
 	#macro DIS_PLANET_NAME 10_000
 	#macro DIS_PLANET_CLIC 255
 	#macro ZOOM_MAX 5

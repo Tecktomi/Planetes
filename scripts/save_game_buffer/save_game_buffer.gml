@@ -3,8 +3,11 @@ function save_game_buffer(){
 	buffer_write(buffer, buffer_u32, VERSION)
 	with control{
 		//PLANETAS
-		var len_p = array_length(planetas)
+		var len_p = array_length(planetas), len_i = array_length(imperios), len_e = array_length(empresas), len_n = array_length(naves)
 		buffer_write(buffer, buffer_u8, len_p)
+		buffer_write(buffer, buffer_u8, len_i)
+		buffer_write(buffer, buffer_u8, len_e)
+		buffer_write(buffer, buffer_u16, len_n)
 		for(var a = 0; a < len_p; a++){
 			var planeta = planetas[a]
 			buffer_write(buffer, buffer_u8, real(planeta.index))
@@ -14,7 +17,7 @@ function save_game_buffer(){
 			buffer_write(buffer, buffer_string, string(planeta.nombre))
 			buffer_write(buffer, buffer_u8, real(planeta.luna.index))
 			for(var b = 0; b < recurso_max; b++){
-				buffer_write(buffer, buffer_u8, real(planeta.recurso[b]))
+				buffer_write(buffer, buffer_u16, real(planeta.recurso[b]))
 				buffer_write(buffer, buffer_f64, real(planeta.recurso_precio[b]))
 				buffer_write(buffer, buffer_f64, real(planeta.recurso_fabrica[b]))
 			}
@@ -35,8 +38,6 @@ function save_game_buffer(){
 			buffer_write(buffer, buffer_u8, real(planeta.tipo))
 		}
 		//Imperios
-		var len_i = array_length(imperios), len_e = array_length(empresas)
-		buffer_write(buffer, buffer_u8, len_i)
 		for(var a = 0; a < len_i; a++){
 			var imperio = imperios[a]
 			buffer_write(buffer, buffer_u8, real(imperio.index))
@@ -54,7 +55,6 @@ function save_game_buffer(){
 			buffer_write(buffer, buffer_u8, a)
 		}
 		//Empresas
-		buffer_write(buffer, buffer_u8, len_e)
 		for(var a = 0; a < len_e; a++){
 			var empresa = empresas[a]
 			buffer_write(buffer, buffer_u8, real(empresa.index))
@@ -94,10 +94,11 @@ function save_game_buffer(){
 			#region Oficinas
 				for(var b = 0; b < len_p; b++){
 					var oficina = empresa.oficina[b]
+					buffer_write(buffer, buffer_bool, (oficina != null_oficina))
 					if oficina != null_oficina{
 						buffer_write(buffer, buffer_u8, real(oficina.planeta.index))
 						for(var c = 0; c < recurso_max; c++){
-							buffer_write(buffer, buffer_u8, real(oficina.recurso[c]))
+							buffer_write(buffer, buffer_u16, real(oficina.recurso[c]))
 							buffer_write(buffer, buffer_u8, real(oficina.precio_compra[c]))
 							buffer_write(buffer, buffer_u8, real(oficina.precio_venta[c]))
 						}
@@ -127,8 +128,6 @@ function save_game_buffer(){
 			buffer_write(buffer, buffer_u8, a)
 		}
 		//Naves
-		var len_n = array_length(naves)
-		buffer_write(buffer, buffer_u16, len_n)
 		for(var a = 0; a < len_n; a++){
 			var nave = naves[a]
 			buffer_write(buffer, buffer_u8, real(nave.origen.index))
@@ -147,7 +146,7 @@ function save_game_buffer(){
 				buffer_write(buffer, buffer_u16, real(nave.viaje_pos))
 			}
 			for(var b = 0; b < recurso_max; b++)
-				buffer_write(buffer, buffer_u8, real(nave.recurso[b]))
+				buffer_write(buffer, buffer_u16, real(nave.recurso[b]))
 			buffer_write(buffer, buffer_u8, real(nave.modelo))
 			buffer_write(buffer, buffer_u8, real(nave.hp))
 			buffer_write(buffer, buffer_u8, real(nave.armas))
@@ -162,6 +161,18 @@ function save_game_buffer(){
 			buffer_write(buffer, buffer_string, string(noticia.titulo))
 			buffer_write(buffer, buffer_string, string(noticia.texto))
 		}
+		//Variables globales
+		buffer_write(buffer, buffer_u16, real(dia))
+		buffer_write(buffer, buffer_u8, real(jugador.pointer[0]))
+		buffer_write(buffer, buffer_u16, real(nave_select.pointer[0]))
+		for(var a = 0; a < recurso_max; a++)
+			buffer_write(buffer, buffer_f64, real(recurso_multiplicador[a]))
+		buffer_write(buffer, buffer_f64, real(miedo_pirata))
+		len = array_length(last_path)
+		buffer_write(buffer, buffer_u8, len)
+		for(var a = 0; a < len; a++)
+			buffer_write(buffer, buffer_u8, real(last_path[a].index))
+		buffer_write(buffer, buffer_u8, last_path_index)
 	}
 	return buffer
 }
