@@ -69,6 +69,7 @@
     {"id":{"name":"draw_text_background","path":"scripts/draw_text_background/draw_text_background.yy",},},
     {"id":{"name":"draw_text_boton","path":"scripts/draw_text_boton/draw_text_boton.yy",},},
     {"id":{"name":"draw_text_pos","path":"scripts/draw_text_pos/draw_text_pos.yy",},},
+    {"id":{"name":"gen_game","path":"scripts/gen_game/gen_game.yy",},},
     {"id":{"name":"gen_nombre","path":"scripts/gen_nombre/gen_nombre.yy",},},
     {"id":{"name":"gen_restriccion_texto","path":"scripts/gen_restriccion_texto/gen_restriccion_texto.yy",},},
     {"id":{"name":"gui_panel","path":"scripts/gui_panel/gui_panel.yy",},},

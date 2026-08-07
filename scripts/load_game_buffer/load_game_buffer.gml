@@ -77,23 +77,23 @@ function load_game_buffer(buffer){
 			planeta.imperio = (c = 0 ? null_imperio : map_imperios[? c])
 			planeta.arquetipo = planeta.imperio.arquetipo
 			array_push(planetas_arquetipo[planeta.imperio.arquetipo], planeta)
-			for(var b = 0; b < recurso_max; b++){
+			for(b = 0; b < recurso_max; b++){
 				planeta.recurso[b] = real(buffer_read(buffer, buffer_u16))
 				planeta.recurso_precio[b] = real(buffer_read(buffer, buffer_f64))
 				planeta.recurso_fabrica[b] = real(buffer_read(buffer, buffer_f64))
 			}
 			var len = real(buffer_read(buffer, buffer_u8))
-			for(var b = 0; b < len; b++)
+			for(b = 0; b < len; b++)
 				planeta.misiones[b] = real(buffer_read(buffer, buffer_u8))
 			planeta.estado = real(buffer_read(buffer, buffer_u8))
 			planeta.estado_repeat = real(buffer_read(buffer, buffer_u8))
 			planeta.infrastructura = real(buffer_read(buffer, buffer_u8))
 			planeta.fabricas = real(buffer_read(buffer, buffer_u8))
-			for(var b = 0; b < infrastructura_max; b++){
+			for(b = 0; b < infrastructura_max; b++){
 				c = real(buffer_read(buffer, buffer_u8))
 				planeta.infrastructura_owner[b] = (c = 0 ? null_empresa : map_empresas[? c])
 			}
-			for(var b = 0; b < 3; b++)
+			for(b = 0; b < 3; b++)
 				planeta.capacidad[b] = real(buffer_read(buffer, buffer_u8))
 			planeta.tipo = real(buffer_read(buffer, buffer_u8))
 		}

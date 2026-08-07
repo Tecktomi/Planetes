@@ -23,11 +23,18 @@ function clear_game(){
 		for(var a = 0; a < arquetipo_max; a++)
 			planetas_arquetipo[a] = array_create(0, null_planeta)
 		imperios = array_create(0, null_imperio)
+		imperios_eliminados = array_create(0, null_imperio)
 		empresas = array_create(0, null_empresa)
 		naves = array_create(0, null_nave)
 		naves_piratas = array_create(0, null_nave)
 		subsistema_vista = false
 		subsistema = null_planeta
 		show = MENU_NULL
+		counter_planeta = 0
+		counter_empresa = 0
+		counter_imperio = 0
+		counter_nave = 0
+		misiones_cumplidas = 0
+		misiones_falladas = 0
 	}
 }
