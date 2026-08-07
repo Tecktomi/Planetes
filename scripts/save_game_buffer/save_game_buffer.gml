@@ -2,20 +2,42 @@ function save_game_buffer(){
 	var buffer = buffer_create(8192, buffer_grow, 1)
 	buffer_write(buffer, buffer_u32, VERSION)
 	with control{
-		//PLANETAS
+		//Punteros
 		var len_p = array_length(planetas), len_i = array_length(imperios), len_e = array_length(empresas), len_n = array_length(naves)
 		buffer_write(buffer, buffer_u8, len_p)
-		buffer_write(buffer, buffer_u8, len_i)
-		buffer_write(buffer, buffer_u8, len_e)
-		buffer_write(buffer, buffer_u16, len_n)
 		for(var a = 0; a < len_p; a++){
 			var planeta = planetas[a]
+			buffer_write(buffer, buffer_bool, bool(planetas[a].gigante))
 			buffer_write(buffer, buffer_u8, real(planeta.index))
+		}
+		buffer_write(buffer, buffer_u8, len_i)
+		for(var a = 0; a < len_i; a++){
+			var imperio = imperios[a]
+			buffer_write(buffer, buffer_u8, real(imperio.index))
+			buffer_write(buffer, buffer_u8, real(imperio.arquetipo))
+		}
+		buffer_write(buffer, buffer_u8, len_e)
+		for(var a = 0; a < len_e; a++)
+			buffer_write(buffer, buffer_u8, real(empresas[a].index))
+		buffer_write(buffer, buffer_u16, len_n)
+		for(var a = 0; a < len_n; a++){
+			buffer_write(buffer, buffer_u8, real(naves[a].empresa.index))
+			buffer_write(buffer, buffer_u8, real(naves[a].modelo))
+			buffer_write(buffer, buffer_u8, real(naves[a].armas))
+			buffer_write(buffer, buffer_u16, real(naves[a].index))
+		}
+		//PLANETAS
+		for(var a = 0; a < len_p; a++){
+			var planeta = planetas[a]
 			buffer_write(buffer, buffer_u16, real(planeta.radio))
 			buffer_write(buffer, buffer_f64, real(planeta.fase))
 			buffer_write(buffer, buffer_u8, real(planeta.size))
 			buffer_write(buffer, buffer_string, string(planeta.nombre))
+			buffer_write(buffer, buffer_u8, color_get_red(planeta.color))
+			buffer_write(buffer, buffer_u8, color_get_green(planeta.color))
+			buffer_write(buffer, buffer_u8, color_get_blue(planeta.color))
 			buffer_write(buffer, buffer_u8, real(planeta.luna.index))
+			buffer_write(buffer, buffer_u8, real(planeta.imperio.index))
 			for(var b = 0; b < recurso_max; b++){
 				buffer_write(buffer, buffer_u16, real(planeta.recurso[b]))
 				buffer_write(buffer, buffer_f64, real(planeta.recurso_precio[b]))
@@ -24,25 +46,21 @@ function save_game_buffer(){
 			var len = array_length(planeta.misiones)
 			buffer_write(buffer, buffer_u8, len)
 			for(var b = 0; b < len; b++)
-				buffer_write(buffer, buffer_u8, planeta.misiones[b])
+				buffer_write(buffer, buffer_u8, real(planeta.misiones[b]))
 			buffer_write(buffer, buffer_u8, real(planeta.estado))
 			buffer_write(buffer, buffer_u8, real(planeta.estado_repeat))
 			buffer_write(buffer, buffer_u8, real(planeta.infrastructura))
 			buffer_write(buffer, buffer_u8, real(planeta.fabricas))
 			for(var b = 0; b < infrastructura_max; b++)
-				buffer_write(buffer, buffer_u8, real(planeta.infrastructura_owner[b].pointer[0]))
+				buffer_write(buffer, buffer_u8, real(planeta.infrastructura_owner[b].index))
 			for(var b = 0; b < 3; b++)
 				buffer_write(buffer, buffer_u8, real(planeta.capacidad[b]))
-			buffer_write(buffer, buffer_bool, bool(planeta.gigante))
-			buffer_write(buffer, buffer_u8, real(planeta.imperio.pointer[0]))
 			buffer_write(buffer, buffer_u8, real(planeta.tipo))
 		}
 		//Imperios
 		for(var a = 0; a < len_i; a++){
 			var imperio = imperios[a]
-			buffer_write(buffer, buffer_u8, real(imperio.index))
 			buffer_write(buffer, buffer_string, string(imperio.nombre))
-			buffer_write(buffer, buffer_u8, real(imperio.arquetipo))
 			for(var b = 0; b < len_i; b++) if a != b{
 				buffer_write(buffer, buffer_u8, real(imperios[b].index))
 				buffer_write(buffer, buffer_f64, real(imperio.relacion_imperio[? imperios[b].index]))
@@ -52,12 +70,11 @@ function save_game_buffer(){
 				for(var c = 0; c < relacion_motivo_max; c++)
 					buffer_write(buffer, buffer_f64, real(imperio.relacion_empresa_motivo[c][? empresas[b].index]))
 			}
-			buffer_write(buffer, buffer_u8, a)
 		}
 		//Empresas
+		buffer_write(buffer, buffer_u8, real(jugador.index))
 		for(var a = 0; a < len_e; a++){
 			var empresa = empresas[a]
-			buffer_write(buffer, buffer_u8, real(empresa.index))
 			buffer_write(buffer, buffer_string, string(empresa.nombre))
 			buffer_write(buffer, buffer_f64, real(empresa.dinero))
 			for(var b = 0; b < recurso_max; b++){
@@ -80,14 +97,14 @@ function save_game_buffer(){
 					buffer_write(buffer, buffer_bool, bool(mision.status))
 					buffer_write(buffer, buffer_u16, real(mision.paga))
 					//DATA
-					mision_data_func[mision.index](mision.data, buffer)
+					mision_data_save[mision.index](mision.data, buffer)
 					for(var c = 0; c < 3; c++)
 						buffer_write(buffer, buffer_u8, real(mision.pointer[c]))
 					var len2 = array_length(mision.restricciones)
 					buffer_write(buffer, buffer_u8, len2)
 					for(var c = 0; c < len2; c++)
 						buffer_write(buffer, buffer_u8, real(mision.restricciones[c].index))
-					buffer_write(buffer, buffer_u16, real(mision.nave_asignada.pointer[0]))
+					buffer_write(buffer, buffer_u16, real(mision.nave_asignada.index))
 				}
 			#endregion
 			buffer_write(buffer, buffer_f64, real(empresa.riesgo))
@@ -125,7 +142,6 @@ function save_game_buffer(){
 			buffer_seek(buffer, buffer_seek_start, seek_end)
 			buffer_write(buffer, buffer_f64, real(empresa.pirata))
 			buffer_write(buffer, buffer_u8, real(empresa.imperio_favorito.index))
-			buffer_write(buffer, buffer_u8, a)
 		}
 		//Naves
 		for(var a = 0; a < len_n; a++){
@@ -134,7 +150,6 @@ function save_game_buffer(){
 			buffer_write(buffer, buffer_u8, real(nave.destino.index))
 			for(var b = 0; b < 3; b++)
 				buffer_write(buffer, buffer_u16, real(nave.pointer[b]))
-			buffer_write(buffer, buffer_u8, real(nave.empresa.pointer[0]))
 			buffer_write(buffer, buffer_bool, bool(nave.viaje_bool))
 			if nave.viaje_bool{
 				var viaje = nave.viaje
@@ -147,9 +162,7 @@ function save_game_buffer(){
 			}
 			for(var b = 0; b < recurso_max; b++)
 				buffer_write(buffer, buffer_u16, real(nave.recurso[b]))
-			buffer_write(buffer, buffer_u8, real(nave.modelo))
-			buffer_write(buffer, buffer_u8, real(nave.hp))
-			buffer_write(buffer, buffer_u8, real(nave.armas))
+			buffer_write(buffer, buffer_u16, real(nave.hp))
 			buffer_write(buffer, buffer_u16, real(nave.pirata_step))
 		}
 		//Noticias
@@ -163,8 +176,7 @@ function save_game_buffer(){
 		}
 		//Variables globales
 		buffer_write(buffer, buffer_u16, real(dia))
-		buffer_write(buffer, buffer_u8, real(jugador.pointer[0]))
-		buffer_write(buffer, buffer_u16, real(nave_select.pointer[0]))
+		buffer_write(buffer, buffer_u16, real(nave_select.index))
 		for(var a = 0; a < recurso_max; a++)
 			buffer_write(buffer, buffer_f64, real(recurso_multiplicador[a]))
 		buffer_write(buffer, buffer_f64, real(miedo_pirata))

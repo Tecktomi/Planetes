@@ -367,6 +367,8 @@ if keyboard_check_pressed(vk_f4)
 	window_set_fullscreen(not window_get_fullscreen())
 if keyboard_check_pressed(ord("G"))
 	buffer_save(save_game_buffer(), "save.txt")
+if keyboard_check_pressed(ord("C"))
+	load_game_buffer(buffer_load("save.txt"))
 if tutorial != -1{
 	if tutorial = 10
 		draw_text_background(RW2, 60, string(tutorial_text[tutorial, (not subsistema_vista)], jugador.misiones[0].data.destino.luna.nombre), fa_center)
