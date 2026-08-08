@@ -867,7 +867,7 @@ null_planeta.imperio = null_imperio
 imperios = array_create(0, null_imperio)
 #region Batalla
 	nave_nombre = ["SP-crusaider", "KZ-1", "TK-32"]
-	nave_hp = [100, 70, 400]
+	nave_hp = [100, 70, 250]
 	nave_vel = [0.3, 0.5, 0.2]
 	nave_carga = [15, 8, 30]
 	batalla_planeta = null_planeta

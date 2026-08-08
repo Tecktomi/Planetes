@@ -235,6 +235,10 @@ function scr_batalla(){
 			batalla_pirata.pirata_step = 0
 			delete_nave(batalla_loser.nave)
 			batalla_planeta = null_planeta
+			batalla_naves = array_create(0, null_batalla_nave)
+			batalla_balas = array_create(0, null_batalla_bala)
+			batalla_efectos = array_create(0, null_batalla_efecto)
+			batalla_asteroides = array_create(0, null_batalla_asteroide)
 		}
 	}
 }

@@ -143,7 +143,7 @@ function load_game_buffer(buffer){
 				var len2 = real(buffer_read(buffer, buffer_u8))
 				for(var c = 0; c < len2; c++)
 					mision.restricciones[c] = map_planetas[? real(buffer_read(buffer, buffer_u8))]
-				mision.nave_asignada = map_naves[? real(buffer_read(buffer, buffer_u8))]
+				mision.nave_asignada = map_naves[? real(buffer_read(buffer, buffer_u16))]
 			}
 			empresa.riesgo = real(buffer_read(buffer, buffer_f64))
 			for(var b = 0; b < len_p; b++) if bool(buffer_read(buffer, buffer_bool)){
@@ -173,7 +173,7 @@ function load_game_buffer(buffer){
 			nave.destino = map_planetas[? real(buffer_read(buffer, buffer_u8))]
 			for(var b = 0; b < 3; b++)
 				nave.pointer[b] = real(buffer_read(buffer, buffer_u16))
-			nave.viaje_bool = bool(buffer_read(buffer, buffer_u8))
+			nave.viaje_bool = bool(buffer_read(buffer, buffer_bool))
 			if nave.viaje_bool{
 				var dis = real(buffer_read(buffer, buffer_u16))
 				var xx = real(buffer_read(buffer, buffer_u16))
